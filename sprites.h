@@ -1,0 +1,19 @@
+#ifndef SPRITES_H
+#define SPRITES_H
+
+#include "raylib.h"
+
+extern Texture2D Escenario;
+extern Texture2D HuevinniCarellinni;
+extern Texture2D Corazon;
+extern Texture2D boton_luchar;
+extern Texture2D boton_item;
+extern Texture2D boton_hablar;
+extern Texture2D boton_mercy;
+extern Texture2D huevo_ataque;
+extern Texture2D martillo_ataque;
+
+void cargarSprites();
+void liberarSprites();
+
+#endif
