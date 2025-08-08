@@ -3,6 +3,17 @@
 
 #include <string>
 
+class Ataque {
+    private:
+        int x;
+        int y;
+        Rectangle collisions;
+    public:
+        int dano;
+
+    void SetX() {}
+};
+
 using namespace std;
 
 extern string room_actual;
