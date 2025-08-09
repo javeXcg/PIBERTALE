@@ -18,7 +18,21 @@ void crearUI() {
     DrawTexture(boton_seleccionado == 2 ? boton_hablar_hover : boton_hablar, 350, botones_y, WHITE);
     DrawTexture(boton_seleccionado == 3 ? boton_item_hover   : boton_item,   550, botones_y, WHITE);
     DrawTexture(boton_seleccionado == 4 ? boton_mercy_hover  : boton_mercy,  750, botones_y, WHITE);
+}
 
+void moverPorUI() {
+    if (!en_ataque) {
+        if (IsKeyPressed(KEY_RIGHT)) {
+            if (boton_seleccionado != 4) {  //PARA EVITAR QUE SE VAYA MAS ALLA QUE LA CANTIDAD DE BOTONES
+                boton_seleccionado++;
+            }
+        } else if (IsKeyPressed(KEY_LEFT)) {
+            if (boton_seleccionado != 1) { //PARA EVITAR QUE SE VAYA MAS ALLA QUE LA CANTIDAD DE BOTONES
+                boton_seleccionado--;
+            }
+        }
+        
+    }
 }
 
 //Primer Ataque
