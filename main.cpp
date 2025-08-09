@@ -45,6 +45,7 @@ int main() {
         
         if (room_actual == "B_HUEVINNI-CARELLINI") {
             crearUI();
+            mostrar_textura(HuevinniCarellinni);
 
             if (!en_ataque) {
                 moverPorUI();
