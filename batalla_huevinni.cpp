@@ -10,7 +10,7 @@
 
 using namespace std;
 
-Rectangle cuadrado_batalla = { 400.0f, 250.0f, 200.0f, 200.0f };
+Rectangle cuadrado_batalla = { 400.0f, 250.0f, 210.0f, 210.0f };
 int botones_y = 500;
 int boton_seleccionado = 1;
 extern Color celeste_transparente = {135, 206, 235, 128};
@@ -18,6 +18,14 @@ extern Color celeste_transparente = {135, 206, 235, 128};
 void crearUI() {
     DrawRectangleLines(cuadrado_batalla.x, cuadrado_batalla.y, cuadrado_batalla.width, cuadrado_batalla.height, WHITE); // CUADRO DE BATALLA
 
+    if (en_ataque == false) {
+        DrawText(texto_caja1.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 10, 30, WHITE);
+        DrawText(texto_caja2.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 50, 30, WHITE);
+        DrawText(texto_caja3.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 90, 30, WHITE);
+        DrawText(texto_caja4.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 130, 30, WHITE);
+        DrawText(texto_caja5.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 170, 30, WHITE);
+    }
+    
     //BOTONES
     DrawTexture(boton_seleccionado == 1 ? boton_luchar_hover : boton_luchar, 150, botones_y, WHITE);
     DrawTexture(boton_seleccionado == 2 ? boton_hablar_hover : boton_hablar, 350, botones_y, WHITE);

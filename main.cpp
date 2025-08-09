@@ -17,6 +17,11 @@ int vida;
 int nivel_de_odio = 5;
 bool en_ataque;
 bool mostrar_colisiones;
+string texto_caja1;
+string texto_caja2;
+string texto_caja3;
+string texto_caja4;
+string texto_caja5;
 
 void manejarRoom() {
     if (room_actual == "B_HUEVINNI-CARELLINI") {
@@ -37,6 +42,12 @@ int main() {
     cargarSprites();
 
     Jugador jugador(500, 300, 90, "Fran", corazon);
+
+    texto_caja1 = "PUTOOOOO";
+    texto_caja2 = "PUTOOOOO";
+    texto_caja3 = "PUTOOOOO";
+    texto_caja4 = "PUTOOOOO";
+    texto_caja5 = "PUTOOOOO";
 
     while (!WindowShouldClose()) {
 

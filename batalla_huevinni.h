@@ -4,9 +4,6 @@
 #include <string>
 using namespace std;
 
-#include <string>
-using namespace std;
-
 class Jugador {
 private:
     int x;
@@ -55,6 +52,11 @@ public:
 
 extern Rectangle cuadrado_batalla;
 extern int boton_seleccionado;
+extern string texto_caja1;
+extern string texto_caja2;
+extern string texto_caja3;
+extern string texto_caja4;
+extern string texto_caja5;
 
 void crearUI();
 void moverPorUI();
