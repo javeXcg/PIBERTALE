@@ -7,6 +7,8 @@ class Ataque {
 private:
     int x;
     int y;
+    
+
     Rectangle collisions;
 
 public:
