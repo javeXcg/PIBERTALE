@@ -60,6 +60,7 @@ void crearUI();
 void moverPorUI();
 void moverPorBatalla(Jugador& jugador);
 void dibujarAlma(int x, int y, Texture2D textura, int x_collision, int y_collision, float width_collision, float height_collision);
+void cambiarCuadradoDeBatalla(int caso);
 
 #endif 
 

@@ -3,12 +3,17 @@
 #include "batalla_huevinni.h"
 #include "globals.h"
 #include "sprites.h"
+#include <chrono>
+#include <thread>
 
 #include <iostream>
+
+using namespace std;
 
 Rectangle cuadrado_batalla = { 400.0f, 250.0f, 200.0f, 200.0f };
 int botones_y = 500;
 int boton_seleccionado = 1;
+extern Color celeste_transparente = {135, 206, 235, 128};
 
 void crearUI() {
     DrawRectangleLines(cuadrado_batalla.x, cuadrado_batalla.y, cuadrado_batalla.width, cuadrado_batalla.height, WHITE); // CUADRO DE BATALLA
@@ -36,10 +41,30 @@ void moverPorBatalla(Jugador& jugador) {
     int x = jugador.getX();
     int y = jugador.getY();
 
-    if (IsKeyDown(KEY_RIGHT)) { x += 3; }
-    if (IsKeyDown(KEY_LEFT)) { x -= 3; }
-    if (IsKeyDown(KEY_DOWN)) { y += 3; }
-    if (IsKeyDown(KEY_UP)) { y -= 3; }
+    // Mover a la derecha (KEY_RIGHT) sin pasarse del límite derecho
+    if (IsKeyDown(KEY_RIGHT)) {
+        if (x + jugador.collision.width < cuadrado_batalla.x + cuadrado_batalla.width - 14) {
+            x += 3;
+        }
+    }
+    // Mover a la izquierda (KEY_LEFT) sin pasarse del límite izquierdo
+    if (IsKeyDown(KEY_LEFT)) {
+        if (x > cuadrado_batalla.x - 2) {
+            x -= 3;
+        }
+    }
+    // Mover abajo (KEY_DOWN) sin pasarse del límite inferior
+    if (IsKeyDown(KEY_DOWN)) {
+        if (y + jugador.collision.height < cuadrado_batalla.y + cuadrado_batalla.height - 7) {
+            y += 3;
+        }
+    }
+    // Mover arriba (KEY_UP) sin pasarse del límite superior
+    if (IsKeyDown(KEY_UP)) {
+        if (y > cuadrado_batalla.y - 2) {
+            y -= 3;
+        }
+    }
 
     jugador.setX(x);
     jugador.setY(y);
@@ -49,10 +74,9 @@ void dibujarAlma(int x, int y, Texture2D textura, int x_collision, int y_collisi
     DrawTexture(textura, x, y, WHITE);
 
     if (mostrar_colisiones) {
-        DrawRectangle(x_collision, y_collision, width_collision, height_collision, SKYBLUE);
+        DrawRectangle(x_collision, y_collision, width_collision, height_collision, celeste_transparente);
     }
 }
-
 
 //Primer Ataque
 //Se te va a llover huevos desde arriba de manera aleatoria.

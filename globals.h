@@ -57,5 +57,6 @@ extern int nivel_de_odio;
 extern bool en_ataque;
 extern int boton;
 extern bool mostrar_colisiones;
+extern Color celeste_transparente;
 
 #endif
