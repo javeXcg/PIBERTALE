@@ -77,7 +77,11 @@ void dibujarAlma(int x, int y, Texture2D textura, int x_collision, int y_collisi
         DrawRectangle(x_collision, y_collision, width_collision, height_collision, celeste_transparente);
     }
 }
+void mostrar_textura(Texture2D textura){
 
+    DrawTexture(textura, 500, 200, WHITE);
+
+}
 void cambiarCuadradoDeBatalla(int caso) {
     int i = 0;
     if (caso == 1) {
