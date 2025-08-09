@@ -14,7 +14,7 @@ using namespace std;
 
 string room_actual;
 int vida;
-int nivel_de_odio;
+int nivel_de_odio = 5;
 bool en_ataque;
 
 void manejarRoom() {
@@ -31,14 +31,33 @@ int main() {
     SetTargetFPS(60);
 
     room_actual = "B_HUEVINNI-CARELLINI";
+    en_ataque = true;
+
     cargarSprites();
+
+    Jugador jugador(500, 300, 90, "Fran", corazon);
 
     while (!WindowShouldClose()) {
         
+        if (IsKeyPressed(KEY_F1)) {
+            en_ataque = !en_ataque;
+            boton_seleccionado = 0;
+        }
 
         BeginDrawing();
         ClearBackground(BLACK);
-        manejarRoom();
+        
+        if (room_actual == "B_HUEVINNI-CARELLINI") {
+            crearUI();
+
+            if (!en_ataque) {
+                moverPorUI();
+            } else {
+                moverPorBatalla(jugador);
+            }        
+        }
+
+        dibujarAlma(jugador.getX(), jugador.getY(), jugador.textura);
 
         EndDrawing();
 

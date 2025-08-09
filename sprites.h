@@ -3,9 +3,9 @@
 
 #include "raylib.h"
 
-extern Texture2D Escenario;
+extern Texture2D escenario;
 extern Texture2D HuevinniCarellinni;
-extern Texture2D Corazon;
+extern Texture2D corazon;
 
 extern Texture2D boton_luchar;
 extern Texture2D boton_item;

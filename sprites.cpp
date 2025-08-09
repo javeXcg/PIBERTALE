@@ -1,8 +1,8 @@
 #include "sprites.h"
 
-Texture2D Escenario;
+Texture2D escenario;
 Texture2D HuevinniCarellinni;
-Texture2D Corazon;
+Texture2D corazon;
 
 Texture2D boton_luchar;
 Texture2D boton_item;
@@ -17,9 +17,9 @@ Texture2D huevo_ataque;
 Texture2D martillo_ataque;
 
 void cargarSprites() {
-    Escenario           = LoadTexture("sprites/escenario.png");
+    escenario           = LoadTexture("sprites/escenario.png");
     HuevinniCarellinni  = LoadTexture("sprites/huevinni_carellinni.png");
-    Corazon             = LoadTexture("sprites/corazon.png");
+    corazon             = LoadTexture("sprites/corazon.png");
 
     boton_luchar        = LoadTexture("sprites/boton_luchar.png");
     boton_item          = LoadTexture("sprites/boton_item.png");
@@ -36,9 +36,9 @@ void cargarSprites() {
 
 
 void liberarSprites() {
-    UnloadTexture(Escenario);
+    UnloadTexture(escenario);
     UnloadTexture(HuevinniCarellinni);
-    UnloadTexture(Corazon);
+    UnloadTexture(corazon);
 
     UnloadTexture(boton_luchar);
     UnloadTexture(boton_item);

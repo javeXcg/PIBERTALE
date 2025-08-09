@@ -21,7 +21,6 @@ void crearUI() {
 }
 
 void moverPorUI() {
-    if (!en_ataque) {
         if (IsKeyPressed(KEY_RIGHT)) {
             if (boton_seleccionado != 4) {  //PARA EVITAR QUE SE VAYA MAS ALLA QUE LA CANTIDAD DE BOTONES
                 boton_seleccionado++;
@@ -31,9 +30,25 @@ void moverPorUI() {
                 boton_seleccionado--;
             }
         }
-        
-    }
 }
+
+void moverPorBatalla(Jugador& jugador) {
+    int x = jugador.getX();
+    int y = jugador.getY();
+
+    if (IsKeyDown(KEY_RIGHT)) { x += 3; }
+    if (IsKeyDown(KEY_LEFT)) { x -= 3; }
+    if (IsKeyDown(KEY_DOWN)) { y += 3; }
+    if (IsKeyDown(KEY_UP)) { y -= 3; }
+
+    jugador.setX(x);
+    jugador.setY(y);
+}
+
+void dibujarAlma(int x, int y, Texture2D textura) {
+    DrawTexture(textura, x, y, WHITE);
+}
+
 
 //Primer Ataque
 //Se te va a llover huevos desde arriba de manera aleatoria.
