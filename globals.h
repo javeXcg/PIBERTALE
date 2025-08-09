@@ -11,7 +11,11 @@ class Ataque {
     public:
         int dano;
 
-    void SetX() {}
+        void setX(int x_new) { x = x_new; }
+        int getX() { return x; }
+
+        void setY(int y_new) { y = y_new; }
+        int getY() { return y; }
 };
 
 using namespace std;
