@@ -1,0 +1,159 @@
+<<<<<<< HEAD
+=======
+In file included from main.cpp:5:
+batalla_huevinni.h: In member function 'void Huevo::mover()':
+batalla_huevinni.h:64:9: error: 'Rectangle Ataque::collisions' is private within this context
+   64 |         collisions.y += velocidadY; // Baja verticalmente
+      |         ^~~~~~~~~~
+In file included from batalla_huevinni.h:3:
+globals.h:12:15: note: declared private here
+   12 |     Rectangle collisions;
+      |               ^~~~~~~~~~
+batalla_huevinni.h: In member function 'void Huevo::dibujar()':
+batalla_huevinni.h:68:35: error: 'Rectangle Ataque::collisions' is private within this context
+   68 |         DrawTexture(textura, (int)collisions.x, (int)collisions.y, WHITE);
+      |                                   ^~~~~~~~~~
+globals.h:12:15: note: declared private here
+   12 |     Rectangle collisions;
+      |               ^~~~~~~~~~
+batalla_huevinni.h:68:54: error: 'Rectangle Ataque::collisions' is private within this context
+   68 |         DrawTexture(textura, (int)collisions.x, (int)collisions.y, WHITE);
+      |                                                      ^~~~~~~~~~
+globals.h:12:15: note: declared private here
+   12 |     Rectangle collisions;
+      |               ^~~~~~~~~~
+main.cpp: In function 'int main()':
+main.cpp:35:5: error: 'ataqueEnemigoActivo' was not declared in this scope
+   35 |     ataqueEnemigoActivo = true;
+      |     ^~~~~~~~~~~~~~~~~~~
+main.cpp:36:5: error: 'inicioAtaque' was not declared in this scope
+   36 |     inicioAtaque = GetTime();
+      |     ^~~~~~~~~~~~
+main.cpp:37:5: error: 'tiempoUltimoHuevo' was not declared in this scope
+   37 |     tiempoUltimoHuevo = GetTime();
+      |     ^~~~~~~~~~~~~~~~~
+main.cpp:44:45: error: 'intervaloHuevo' was not declared in this scope
+   44 |     if (tiempoActual - tiempoUltimoHuevo >= intervaloHuevo) {
+      |                                             ^~~~~~~~~~~~~~
+main.cpp:45:24: error: 'texturaHuevo' was not declared in this scope
+   45 |         generar_huevos(texturaHuevo);
+      |                        ^~~~~~~~~~~~
+main.cpp:45:9: error: 'generar_huevos' was not declared in this scope
+   45 |         generar_huevos(texturaHuevo);
+      |         ^~~~~~~~~~~~~~
+main.cpp:50:5: error: 'actualizar_huevos' was not declared in this scope
+   50 |     actualizar_huevos();
+      |     ^~~~~~~~~~~~~~~~~
+main.cpp:53:26: error: 'jugador' was not declared in this scope; did you mean 'Jugador'?
+   53 |     verificar_colisiones(jugador);
+      |                          ^~~~~~~
+      |                          Jugador
+main.cpp:53:5: error: 'verificar_colisiones' was not declared in this scope; did you mean 'mostrar_colisiones'?
+   53 |     verificar_colisiones(jugador);
+      |     ^~~~~~~~~~~~~~~~~~~~
+      |     mostrar_colisiones
+main.cpp:56:40: error: 'tiempoAtaqueTotal' was not declared in this scope
+   56 |     if (tiempoActual - inicioAtaque >= tiempoAtaqueTotal) {
+      |                                        ^~~~~~~~~~~~~~~~~
+main.cpp:58:9: error: 'huevos' was not declared in this scope; did you mean 'Huevo'?
+   58 |         huevos.clear();
+      |         ^~~~~~
+      |         Huevo
+main.cpp:63:1: error: 'dibujar_huevos' was not declared in this scope
+   63 | dibujar_huevos();
+      | ^~~~~~~~~~~~~~
+In file included from batalla_huevinni.cpp:3:
+batalla_huevinni.h: In member function 'void Huevo::mover()':
+batalla_huevinni.h:64:9: error: 'Rectangle Ataque::collisions' is private within this context
+   64 |         collisions.y += velocidadY; // Baja verticalmente
+      |         ^~~~~~~~~~
+In file included from batalla_huevinni.h:3:
+globals.h:12:15: note: declared private here
+   12 |     Rectangle collisions;
+      |               ^~~~~~~~~~
+batalla_huevinni.h: In member function 'void Huevo::dibujar()':
+batalla_huevinni.h:68:35: error: 'Rectangle Ataque::collisions' is private within this context
+   68 |         DrawTexture(textura, (int)collisions.x, (int)collisions.y, WHITE);
+      |                                   ^~~~~~~~~~
+globals.h:12:15: note: declared private here
+   12 |     Rectangle collisions;
+      |               ^~~~~~~~~~
+batalla_huevinni.h:68:54: error: 'Rectangle Ataque::collisions' is private within this context
+   68 |         DrawTexture(textura, (int)collisions.x, (int)collisions.y, WHITE);
+      |                                                      ^~~~~~~~~~
+globals.h:12:15: note: declared private here
+   12 |     Rectangle collisions;
+      |               ^~~~~~~~~~
+batalla_huevinni.cpp: At global scope:
+batalla_huevinni.cpp:26:8: error: redefinition of 'struct Huevo'
+   26 | struct Huevo {
+      |        ^~~~~
+batalla_huevinni.h:51:7: note: previous definition of 'struct Huevo'
+   51 | class Huevo : public Ataque {
+      |       ^~~~~
+batalla_huevinni.cpp: In function 'void generar_huevos(Texture2D)':
+batalla_huevinni.cpp:47:11: error: no matching function for call to 'Huevo::Huevo()'
+   47 |     Huevo h;
+      |           ^
+batalla_huevinni.h:56:5: note: candidate: 'Huevo::Huevo(int, int, int, int, int, float, Texture2D)'
+   56 |     Huevo(int x_init, int y_init, int dano_init, int width, int height, float vel, Texture2D tex)
+      |     ^~~~~
+batalla_huevinni.h:56:5: note:   candidate expects 7 arguments, 0 provided
+batalla_huevinni.h:51:7: note: candidate: 'constexpr Huevo::Huevo(const Huevo&)'
+   51 | class Huevo : public Ataque {
+      |       ^~~~~
+batalla_huevinni.h:51:7: note:   candidate expects 1 argument, 0 provided
+batalla_huevinni.h:51:7: note: candidate: 'constexpr Huevo::Huevo(Huevo&&)'
+batalla_huevinni.h:51:7: note:   candidate expects 1 argument, 0 provided
+batalla_huevinni.cpp:48:7: error: 'struct Huevo' has no member named 'huevosx'; did you mean 'Huevo'?
+   48 |     h.huevosx = GetRandomValue(cuadrado_batalla.x, cuadrado_batalla.x + cuadrado_batalla.width - textura.width);
+      |       ^~~~~~~
+      |       Huevo
+batalla_huevinni.cpp:49:7: error: 'struct Huevo' has no member named 'huevosy'; did you mean 'Huevo'?
+   49 |     h.huevosy = cuadrado_batalla.y - textura.height;
+      |       ^~~~~~~
+      |       Huevo
+batalla_huevinni.cpp:50:7: error: 'struct Huevo' has no member named 'VelocidadY'; did you mean 'velocidadY'?
+   50 |     h.VelocidadY = 4.0f;
+      |       ^~~~~~~~~~
+      |       velocidadY
+batalla_huevinni.cpp:51:7: error: 'struct Huevo' has no member named 'huevo_ataque'
+   51 |     h.huevo_ataque = textura;
+      |       ^~~~~~~~~~~~
+batalla_huevinni.cpp: In function 'void actualizar_huevos()':
+batalla_huevinni.cpp:57:11: error: 'struct Huevo' has no member named 'huevosy'; did you mean 'Huevo'?
+   57 |         h.huevosy += h.VelocidadY;
+      |           ^~~~~~~
+      |           Huevo
+batalla_huevinni.cpp:57:24: error: 'struct Huevo' has no member named 'VelocidadY'; did you mean 'velocidadY'?
+   57 |         h.huevosy += h.VelocidadY;
+      |                        ^~~~~~~~~~
+      |                        velocidadY
+batalla_huevinni.cpp: In function 'void dibujar_huevos()':
+batalla_huevinni.cpp:64:23: error: 'struct Huevo' has no member named 'huevo_ataque'
+   64 |         DrawTexture(h.huevo_ataque, h.huevosx, h.huevosy, WHITE);
+      |                       ^~~~~~~~~~~~
+batalla_huevinni.cpp:64:39: error: 'struct Huevo' has no member named 'huevosx'; did you mean 'Huevo'?
+   64 |         DrawTexture(h.huevo_ataque, h.huevosx, h.huevosy, WHITE);
+      |                                       ^~~~~~~
+      |                                       Huevo
+batalla_huevinni.cpp:64:50: error: 'struct Huevo' has no member named 'huevosy'; did you mean 'Huevo'?
+   64 |         DrawTexture(h.huevo_ataque, h.huevosx, h.huevosy, WHITE);
+      |                                                  ^~~~~~~
+      |                                                  Huevo
+batalla_huevinni.cpp: In function 'void verificar_colisiones(Jugador&)':
+batalla_huevinni.cpp:72:35: error: 'struct Huevo' has no member named 'huevosx'; did you mean 'Huevo'?
+   72 |         Rectangle huevoRect = { h.huevosx, h.huevosy, (float)h.huevo_ataque.width, (float)h.huevo_ataque.height };
+      |                                   ^~~~~~~
+      |                                   Huevo
+batalla_huevinni.cpp:72:46: error: 'struct Huevo' has no member named 'huevosy'; did you mean 'Huevo'?
+   72 |         Rectangle huevoRect = { h.huevosx, h.huevosy, (float)h.huevo_ataque.width, (float)h.huevo_ataque.height };
+      |                                              ^~~~~~~
+      |                                              Huevo
+batalla_huevinni.cpp:72:64: error: 'struct Huevo' has no member named 'huevo_ataque'
+   72 |         Rectangle huevoRect = { h.huevosx, h.huevosy, (float)h.huevo_ataque.width, (float)h.huevo_ataque.height };
+      |                                                                ^~~~~~~~~~~~
+batalla_huevinni.cpp:72:93: error: 'struct Huevo' has no member named 'huevo_ataque'
+   72 |         Rectangle huevoRect = { h.huevosx, h.huevosy, (float)h.huevo_ataque.width, (float)h.huevo_ataque.height };
+      |                                                                                             ^~~~~~~~~~~~
+>>>>>>> 53a28851b670c2a3f9f5773a3ef5f518bfa70ed8

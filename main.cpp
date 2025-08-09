@@ -36,9 +36,40 @@ int main() {
     InitWindow(screenWidth, screenHeight, "Pibertale");
     SetTargetFPS(60);
 
+    
+    ataqueEnemigoActivo = true;
+    inicioAtaque = GetTime();
+    tiempoUltimoHuevo = GetTime();
+    
+    // En tu bucle principal de juego:
+if (ataqueEnemigoActivo) {
+    float tiempoActual = GetTime();
+
+    // Generar huevo cada intervalo
+    if (tiempoActual - tiempoUltimoHuevo >= intervaloHuevo) {
+        generar_huevos(texturaHuevo);
+        tiempoUltimoHuevo = tiempoActual;
+    }
+
+    // Mover huevos
+    actualizar_huevos();
+
+    // Colisiones
+    verificar_colisiones(jugador);
+
+    // Fin del ataque
+    if (tiempoActual - inicioAtaque >= tiempoAtaqueTotal) {
+        ataqueEnemigoActivo = false;
+        huevos.clear();
+    }
+}
+
+// Siempre dibujar huevos (si hay)
+dibujar_huevos();
+    
     room_actual = "B_HUEVINNI-CARELLINI";
     en_ataque = true;
-
+ 
     cargarSprites();
 
     Jugador jugador(500, 300, 90, "Fran", corazon);

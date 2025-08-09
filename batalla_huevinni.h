@@ -4,6 +4,9 @@
 #include <string>
 using namespace std;
 
+#include <string>
+using namespace std;
+
 class Jugador {
 private:
     int x;
@@ -48,7 +51,26 @@ public:
     }
     int getY() { return y; }
 };
+class Huevo : public Ataque {
+public:
+    Texture2D textura;
+    float velocidadY;
 
+    Huevo(int x_init, int y_init, int dano_init, int width, int height, float vel, Texture2D tex)
+        : Ataque(x_init, y_init, dano_init, width, height) 
+    {
+        textura = tex;
+        velocidadY = vel;
+    }
+
+    void mover() {
+        collisions.y += velocidadY; // Baja verticalmente
+    }
+
+    void dibujar() {
+        DrawTexture(textura, (int)collisions.x, (int)collisions.y, WHITE);
+    }
+};
 
 extern Rectangle cuadrado_batalla;
 extern int boton_seleccionado;

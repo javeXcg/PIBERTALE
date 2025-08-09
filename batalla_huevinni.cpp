@@ -5,15 +5,87 @@
 #include "sprites.h"
 #include <chrono>
 #include <thread>
-
+#include <vector>
 #include <iostream>
 
 using namespace std;
 
+<<<<<<< HEAD
 Rectangle cuadrado_batalla = { 400.0f, 250.0f, 210.0f, 210.0f };
 int botones_y = 500;
 int boton_seleccionado = 1;
 Color celeste_transparente = {135, 206, 235, 128};
+=======
+//Velocidad de caida del huevo
+int VelocidadY = 5;
+
+//X y Y del guevo
+int huevosx = 500;
+int huevosy = 200;
+
+Rectangle cuadrado_batalla = { 400.0f, 250.0f, 200.0f, 200.0f };
+int botones_y = 500;
+int boton_seleccionado = 1;
+Color celeste_transparente = {135, 206, 235, 128};
+
+//Creo parametros del huevo
+struct Huevo {
+    float huevosx;
+    float huevosy;
+    float VelocidadY;
+    Texture2D huevo_ataque;
+};
+vector<Huevo> huevos;
+
+bool ataqueEnemigoActivo = false;
+float tiempoUltimoHuevo = 0.0f;
+float intervaloHuevo = 0.5f; // cada medio segundo aparece uno
+float tiempoAtaqueTotal = 5.0f; // el ataque dura 5 segundos
+float inicioAtaque = 0.0f;
+
+
+
+void crear_ataque_huevo(){
+    huevos.clear();
+};
+
+void generar_huevos(Texture2D textura){
+    Huevo h;
+    h.huevosx = GetRandomValue(cuadrado_batalla.x, cuadrado_batalla.x + cuadrado_batalla.width - textura.width);
+    h.huevosy = cuadrado_batalla.y - textura.height;
+    h.VelocidadY = 4.0f;
+    h.huevo_ataque = textura;
+    huevos.push_back(h);
+};
+
+void actualizar_huevos() {
+    for (auto &h : huevos) {
+        h.huevosy += h.VelocidadY;
+    }
+}
+
+
+void dibujar_huevos() {
+    for (auto &h : huevos) {
+        DrawTexture(h.huevo_ataque, h.huevosx, h.huevosy, WHITE);
+    }
+}
+
+void verificar_colisiones(Jugador &jugador) {
+    Rectangle jugadorRect = jugador.collision;
+
+    for (auto &h : huevos) {
+        Rectangle huevoRect = { h.huevosx, h.huevosy, (float)h.huevo_ataque.width, (float)h.huevo_ataque.height };
+        if (CheckCollisionRecs(jugadorRect, huevoRect)) {
+            cout << "Jugador golpeado por un huevo!" << endl;
+            // Aquí podrías restar vida o activar un estado de daño
+        }
+    }
+}
+
+
+
+>>>>>>> 53a28851b670c2a3f9f5773a3ef5f518bfa70ed8
 
 void crearUI() {
     DrawRectangleLines(cuadrado_batalla.x, cuadrado_batalla.y, cuadrado_batalla.width, cuadrado_batalla.height, WHITE); // CUADRO DE BATALLA
@@ -106,6 +178,7 @@ void cambiarCuadradoDeBatalla(int caso) {
         }
     }
 }
+
 
 //Primer Ataque
 //Se te va a llover huevos desde arriba de manera aleatoria.
