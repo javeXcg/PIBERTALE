@@ -45,8 +45,12 @@ void moverPorBatalla(Jugador& jugador) {
     jugador.setY(y);
 }
 
-void dibujarAlma(int x, int y, Texture2D textura) {
+void dibujarAlma(int x, int y, Texture2D textura, int x_collision, int y_collision, float width_collision, float height_collision) {
     DrawTexture(textura, x, y, WHITE);
+
+    if (mostrar_colisiones) {
+        DrawRectangle(x_collision, y_collision, width_collision, height_collision, SKYBLUE);
+    }
 }
 
 

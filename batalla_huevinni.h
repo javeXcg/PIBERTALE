@@ -16,6 +16,7 @@ public:
     int salud;
     string nombre;
     Texture2D textura;
+    Rectangle collision;
 
     Jugador(int x_init, int y_init, int salud_init, string nombre_init, Texture2D textura_init) {
         x = x_init;
@@ -23,12 +24,24 @@ public:
         salud = salud_init;
         nombre = nombre_init;
         textura = textura_init;
+
+        // Inicializar el rectángulo de colisión basado en posición y tamaño de textura
+        collision.x = static_cast<float>(x);
+        collision.y = static_cast<float>(y);
+        collision.width = static_cast<float>(textura.width - 10);
+        collision.height = static_cast<float>(textura.height -3);
     }
 
-    void setX(int x_new) { x = x_new; }
+    void setX(int x_new) { 
+        x = x_new; 
+        collision.x = static_cast<float>(x);
+    }
     int getX() { return x; }
 
-    void setY(int y_new) { y = y_new; }
+    void setY(int y_new) { 
+        y = y_new; 
+        collision.y = static_cast<float>(y);
+    }
     int getY() { return y; }
 };
 

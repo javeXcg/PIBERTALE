@@ -54,10 +54,9 @@ int main() {
                 moverPorUI();
             } else {
                 moverPorBatalla(jugador);
+                dibujarAlma(jugador.getX(), jugador.getY(), jugador.textura);
             }        
         }
-
-        dibujarAlma(jugador.getX(), jugador.getY(), jugador.textura);
 
         EndDrawing();
 
