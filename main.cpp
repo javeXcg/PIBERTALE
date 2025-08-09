@@ -16,6 +16,7 @@ string room_actual;
 int vida;
 int nivel_de_odio = 5;
 bool en_ataque;
+bool mostrar_colisiones;
 
 void manejarRoom() {
     if (room_actual == "B_HUEVINNI-CARELLINI") {
@@ -44,6 +45,10 @@ int main() {
             boton_seleccionado = 0;
         }
 
+        if (IsKeyPressed(KEY_F2)) {
+            mostrar_colisiones = !mostrar_colisiones;
+        }
+
         BeginDrawing();
         ClearBackground(BLACK);
         
@@ -54,7 +59,7 @@ int main() {
                 moverPorUI();
             } else {
                 moverPorBatalla(jugador);
-                dibujarAlma(jugador.getX(), jugador.getY(), jugador.textura);
+                dibujarAlma(jugador.getX(), jugador.getY(), jugador.textura, jugador.collision.x, jugador.collision.y, jugador.collision.width, jugador.collision.height);
             }        
         }
 

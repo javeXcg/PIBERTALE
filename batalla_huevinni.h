@@ -25,22 +25,29 @@ public:
         nombre = nombre_init;
         textura = textura_init;
 
-        // Inicializar el rectángulo de colisión basado en posición y tamaño de textura
-        collision.x = static_cast<float>(x);
-        collision.y = static_cast<float>(y);
-        collision.width = static_cast<float>(textura.width - 10);
-        collision.height = static_cast<float>(textura.height -3);
+        float margen_x = 15.0f;
+        float margen_y = 8.0f;
+
+        collision.width = static_cast<float>(textura.width) - margen_x;
+        collision.height = static_cast<float>(textura.height) - margen_y;
+
+        collision.x = static_cast<float>(x) + margen_x / 2.0f;
+        collision.y = static_cast<float>(y) + margen_y / 2.0f;
     }
+
 
     void setX(int x_new) { 
         x = x_new; 
-        collision.x = static_cast<float>(x);
+        float margen_x = 15.0f;  // mismo margen que en constructor
+        collision.x = static_cast<float>(x) + margen_x / 2.0f;
     }
     int getX() { return x; }
 
+
     void setY(int y_new) { 
         y = y_new; 
-        collision.y = static_cast<float>(y);
+        float margen_y = 8.0f;  // mismo margen que en constructor
+        collision.y = static_cast<float>(y) + margen_y / 2.0f;
     }
     int getY() { return y; }
 };
@@ -52,7 +59,7 @@ extern int boton_seleccionado;
 void crearUI();
 void moverPorUI();
 void moverPorBatalla(Jugador& jugador);
-void dibujarAlma(int x, int y, Texture2D textura);
+void dibujarAlma(int x, int y, Texture2D textura, int x_collision, int y_collision, float width_collision, float height_collision);
 
 #endif 
 
