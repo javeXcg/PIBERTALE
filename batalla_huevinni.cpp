@@ -79,7 +79,7 @@ void dibujarAlma(int x, int y, Texture2D textura, int x_collision, int y_collisi
 }
 
 void mostrar_textura(Texture2D textura){
-    DrawTexture(textura, 500, 200, WHITE);
+    DrawTexture(textura, 420, 75, WHITE);
 }
 
 void cambiarCuadradoDeBatalla(int caso) {
