@@ -78,6 +78,25 @@ void dibujarAlma(int x, int y, Texture2D textura, int x_collision, int y_collisi
     }
 }
 
+void cambiarCuadradoDeBatalla(int caso) {
+    int i = 0;
+    if (caso == 1) {
+        while (i != 30) {
+            cuadrado_batalla.width -= 15;
+            cuadrado_batalla.x += 15 / 2.0f;  // mover hacia la derecha la mitad del cambio
+            i++;
+            std::this_thread::sleep_for(std::chrono::duration<double>(0.1));
+        }
+    } else if (caso == 2) {
+        while (i != 30) {
+            cuadrado_batalla.width += 15;
+            cuadrado_batalla.x -= 15 / 2.0f;  // mover hacia la izquierda la mitad del cambio
+            i++;
+            std::this_thread::sleep_for(std::chrono::duration<double>(0.1));
+        }
+    }
+}
+
 //Primer Ataque
 //Se te va a llover huevos desde arriba de manera aleatoria.
 /*
