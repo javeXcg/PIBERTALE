@@ -1,3 +1,0 @@
-batalla_huevinni.cpp:16:14: warning: 'celeste_transparente' initialized and declared 'extern'
-   16 | extern Color celeste_transparente = {135, 206, 235, 128};
-      |              ^~~~~~~~~~~~~~~~~~~~

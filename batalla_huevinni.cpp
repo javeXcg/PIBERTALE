@@ -13,7 +13,7 @@ using namespace std;
 Rectangle cuadrado_batalla = { 400.0f, 250.0f, 210.0f, 210.0f };
 int botones_y = 500;
 int boton_seleccionado = 1;
-extern Color celeste_transparente = {135, 206, 235, 128};
+Color celeste_transparente = {135, 206, 235, 128};
 
 void crearUI() {
     DrawRectangleLines(cuadrado_batalla.x, cuadrado_batalla.y, cuadrado_batalla.width, cuadrado_batalla.height, WHITE); // CUADRO DE BATALLA

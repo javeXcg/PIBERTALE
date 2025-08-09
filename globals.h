@@ -2,6 +2,7 @@
 #define GLOBALS_H
 
 #include <string>
+#include <vector>
 
 class Ataque {
 private:
@@ -58,5 +59,7 @@ extern bool en_ataque;
 extern int boton;
 extern bool mostrar_colisiones;
 extern Color celeste_transparente;
+
+std::vector<std::string> adaptar_dialogo(const std::string &dialogo, size_t limite = 45);
 
 #endif

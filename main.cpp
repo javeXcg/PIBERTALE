@@ -43,11 +43,13 @@ int main() {
 
     Jugador jugador(500, 300, 90, "Fran", corazon);
 
-    texto_caja1 = "PUTOOOOO";
-    texto_caja2 = "PUTOOOOO";
-    texto_caja3 = "PUTOOOOO";
-    texto_caja4 = "PUTOOOOO";
-    texto_caja5 = "PUTOOOOO";
+    vector<string> dialogo = adaptar_dialogo("El Rey Carellinni bloquea tu paso. Se nota que está muy defensivo...");
+
+    texto_caja1 = dialogo[0];
+    texto_caja2 = dialogo[1];
+    texto_caja3 = dialogo[2];
+    texto_caja4 = dialogo[3];
+    texto_caja5 = dialogo[4];
 
     while (!WindowShouldClose()) {
 
