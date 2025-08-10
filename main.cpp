@@ -6,11 +6,18 @@
 #include "globals.h"
 #include <iostream>
 #include <string>
+#include "json.hpp"
 
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
-using namespace std;
+#if defined(_WIN32) || defined(_WIN64)
+#include "json.hpp"
+using json = nlohmann::json;
+#else
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+#endif
 
 string room_actual;
 int vida = 88;
