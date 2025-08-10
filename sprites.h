@@ -6,6 +6,7 @@
 extern Texture2D escenario;
 extern Texture2D HuevinniCarellinni;
 extern Texture2D corazon;
+extern Texture2D corazon_atacado;
 
 extern Texture2D boton_luchar;
 extern Texture2D boton_item;

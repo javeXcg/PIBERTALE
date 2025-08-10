@@ -79,7 +79,7 @@ int main() {
 
         if (ataqueEnemigoActivo) {
             // Generar huevo cada intervalo
-            if (tiempoActual - tiempoUltimoHuevo >= 0.5) {
+            if (tiempoActual - tiempoUltimoHuevo >= 0.3) {
                 tiempoUltimoHuevo = tiempoActual;
                 generar_ataques(huevo_ataque); // Asegúrate de llamar a esta función aquí
             }
@@ -95,6 +95,8 @@ int main() {
             // Fin del ataque
             if (tiempoActual - inicioAtaque >= 10) {
                 ataqueEnemigoActivo = false;
+                en_ataque = false;
+                cambiarCuadradoDeBatalla(2);
                 ataques.clear();
             }
         }
@@ -128,7 +130,11 @@ int main() {
 
             if (en_ataque) {
                 moverPorBatalla(jugador);
-                DrawTexture(corazon, jugador.getX(), jugador.getY(), WHITE);
+                if (invencible == false) {
+                    DrawTexture(corazon, jugador.getX(), jugador.getY(), WHITE);         
+                } else {
+                    DrawTexture(corazon_atacado, jugador.getX(), jugador.getY(), WHITE);
+                }
                 dibujarAlma(jugador.getX(), jugador.getY(), jugador.textura,
                         jugador.collision.x + 12, jugador.collision.y + 10,
                         jugador.collision.width, jugador.collision.height);

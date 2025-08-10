@@ -3,6 +3,7 @@
 Texture2D escenario;
 Texture2D HuevinniCarellinni;
 Texture2D corazon;
+Texture2D corazon_atacado;
 
 Texture2D boton_luchar;
 Texture2D boton_item;
@@ -21,6 +22,7 @@ void cargarSprites() {
     escenario           = LoadTexture("sprites/escenario.png");
     HuevinniCarellinni  = LoadTexture("sprites/huevinni_carellinni.png");
     corazon             = LoadTexture("sprites/corazon.png");
+    corazon_atacado     = LoadTexture("sprites/corazon_atacado.png");
 
     boton_luchar        = LoadTexture("sprites/boton_luchar.png");
     boton_item          = LoadTexture("sprites/boton_item.png");
@@ -41,6 +43,7 @@ void liberarSprites() {
     UnloadTexture(escenario);
     UnloadTexture(HuevinniCarellinni);
     UnloadTexture(corazon);
+    UnloadTexture(corazon_atacado);
 
     UnloadTexture(boton_luchar);
     UnloadTexture(boton_item);

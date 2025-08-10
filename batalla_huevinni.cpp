@@ -31,7 +31,7 @@ vector<AtaqueObjeto> ataques;
 void generar_ataques(Texture2D textura) {
     float posX = GetRandomValue((int)cuadrado_batalla.x, (int)(cuadrado_batalla.x + cuadrado_batalla.width - textura.width));
     float posY = cuadrado_batalla.y - textura.height;
-    float velocidad = 4.0f;
+    float velocidad = 5.0f;
     ataques.emplace_back(posX, posY, velocidad, textura);
 }
 
@@ -175,7 +175,7 @@ void moverPorBatalla(Jugador& jugador) {
     }
     // Mover abajo (KEY_DOWN) sin pasarse del límite inferior
     if (IsKeyDown(KEY_DOWN)) {
-        if (y + jugador.collision.height < cuadrado_batalla.y + cuadrado_batalla.height - 31) {
+        if (y + jugador.collision.height < cuadrado_batalla.y + cuadrado_batalla.height - 37) {
             y += 3;
         }
     }
