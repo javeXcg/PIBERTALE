@@ -7,85 +7,69 @@
 #include <thread>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
-<<<<<<< HEAD
 Rectangle cuadrado_batalla = { 400.0f, 250.0f, 210.0f, 210.0f };
 int botones_y = 500;
 int boton_seleccionado = 1;
 Color celeste_transparente = {135, 206, 235, 128};
-=======
+
 //Velocidad de caida del huevo
 int VelocidadY = 5;
 
 //X y Y del guevo
-int huevosx = 500;
-int huevosy = 200;
+int huevosx = 480;
+int huevosy = 170;
 
-Rectangle cuadrado_batalla = { 400.0f, 250.0f, 200.0f, 200.0f };
-int botones_y = 500;
-int boton_seleccionado = 1;
-Color celeste_transparente = {135, 206, 235, 128};
-
-//Creo parametros del huevo
-struct Huevo {
-    float huevosx;
-    float huevosy;
-    float VelocidadY;
-    Texture2D huevo_ataque;
-};
+// Vector global o externo
 vector<Huevo> huevos;
 
-bool ataqueEnemigoActivo = false;
-float tiempoUltimoHuevo = 0.0f;
-float intervaloHuevo = 0.5f; // cada medio segundo aparece uno
-float tiempoAtaqueTotal = 5.0f; // el ataque dura 5 segundos
-float inicioAtaque = 0.0f;
+// Generar un nuevo huevo y agregar al vector
+void generar_huevos(Texture2D textura) {
+    float posX = GetRandomValue((int)cuadrado_batalla.x, (int)(cuadrado_batalla.x + cuadrado_batalla.width - textura.width));
+    float posY = cuadrado_batalla.y - textura.height;
+    float velocidad = 4.0f;
+    huevos.emplace_back(posX, posY, velocidad, textura);
+}
 
-
-
-void crear_ataque_huevo(){
-    huevos.clear();
-};
-
-void generar_huevos(Texture2D textura){
-    Huevo h;
-    h.huevosx = GetRandomValue(cuadrado_batalla.x, cuadrado_batalla.x + cuadrado_batalla.width - textura.width);
-    h.huevosy = cuadrado_batalla.y - textura.height;
-    h.VelocidadY = 4.0f;
-    h.huevo_ataque = textura;
-    huevos.push_back(h);
-};
-
+// Actualizar posiciones de todos los huevos
 void actualizar_huevos() {
-    for (auto &h : huevos) {
-        h.huevosy += h.VelocidadY;
+    for (auto& h : huevos) {
+        h.mover();
     }
+    // Aquí puedes borrar huevos que se salgan de pantalla si quieres
 }
 
-
+// Dibujar todos los huevos en pantalla
 void dibujar_huevos() {
-    for (auto &h : huevos) {
-        DrawTexture(h.huevo_ataque, h.huevosx, h.huevosy, WHITE);
+    for (auto& h : huevos) {
+        h.dibujar();
     }
 }
 
-void verificar_colisiones(Jugador &jugador) {
+// Verificar colisiones entre huevos y jugador
+void verificar_colisiones(Jugador& jugador) {
     Rectangle jugadorRect = jugador.collision;
-
-    for (auto &h : huevos) {
-        Rectangle huevoRect = { h.huevosx, h.huevosy, (float)h.huevo_ataque.width, (float)h.huevo_ataque.height };
-        if (CheckCollisionRecs(jugadorRect, huevoRect)) {
-            cout << "Jugador golpeado por un huevo!" << endl;
-            // Aquí podrías restar vida o activar un estado de daño
+    for (auto& h : huevos) {
+        if (CheckCollisionRecs(jugadorRect, h.getCollisionRect())) {
+            cout << "Jugador golpeado por huevo!" << endl;
+            // Lógica de daño o efecto aquí
         }
     }
 }
 
+void eliminar_huevos_fuera_pantalla() {
+    huevos.erase(
+        std::remove_if(huevos.begin(), huevos.end(), [](const Huevo& h) {
+            return h.y >= 100;  // Si el huevo bajó más que la pantalla, lo borramos
+        }),
+        huevos.end()
+    );
+}
 
 
->>>>>>> 53a28851b670c2a3f9f5773a3ef5f518bfa70ed8
 
 void crearUI() {
     DrawRectangleLines(cuadrado_batalla.x, cuadrado_batalla.y, cuadrado_batalla.width, cuadrado_batalla.height, WHITE); // CUADRO DE BATALLA
@@ -123,7 +107,7 @@ void moverPorBatalla(Jugador& jugador) {
 
     // Mover a la derecha (KEY_RIGHT) sin pasarse del límite derecho
     if (IsKeyDown(KEY_RIGHT)) {
-        if (x + jugador.collision.width < cuadrado_batalla.x + cuadrado_batalla.width - 14) {
+        if (x + jugador.collision.width < cuadrado_batalla.x + cuadrado_batalla.width - 38) {
             x += 3;
         }
     }
@@ -135,7 +119,7 @@ void moverPorBatalla(Jugador& jugador) {
     }
     // Mover abajo (KEY_DOWN) sin pasarse del límite inferior
     if (IsKeyDown(KEY_DOWN)) {
-        if (y + jugador.collision.height < cuadrado_batalla.y + cuadrado_batalla.height - 7) {
+        if (y + jugador.collision.height < cuadrado_batalla.y + cuadrado_batalla.height - 31) {
             y += 3;
         }
     }

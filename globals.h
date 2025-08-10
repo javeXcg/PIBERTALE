@@ -8,11 +8,9 @@ class Ataque {
 private:
     int x;
     int y;
-    
-
-    Rectangle collisions;
 
 public:
+    Rectangle collisions;
     int dano;
 
     // Constructor para inicializar posición, daño y tamaño del rectángulo de colisión
