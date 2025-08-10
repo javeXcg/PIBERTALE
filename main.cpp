@@ -13,7 +13,8 @@
 using namespace std;
 
 string room_actual;
-int vida;
+int vida = 88;
+int vida_maxima = 99;
 int nivel_de_odio = 5;
 bool en_ataque;
 bool mostrar_colisiones;
@@ -26,45 +27,20 @@ bool ataqueEnemigoActivo = true;
 double inicioAtaque = GetTime();
 double tiempoUltimoHuevo = GetTime();
 
-void manejarRoom() {
+void manejarRoom(Jugador jugador) {
     if (room_actual == "B_HUEVINNI-CARELLINI") {
-        crearUI();
+        crearUI(jugador);
     }
 }
 
 int main() {
     const int screenWidth = 1000;
-    const int screenHeight = 600;
+    const int screenHeight = 670;
 
     InitWindow(screenWidth, screenHeight, "Pibertale");
     SetTargetFPS(60);
     
     Jugador jugador(500, 300, 90, "Fran", corazon);
-
-    // En tu bucle principal de juego:
-    if (ataqueEnemigoActivo) {
-        float tiempoActual = GetTime();
-
-        // Generar huevo cada intervalo
-        if (tiempoActual - tiempoUltimoHuevo >= 0.5) {
-            tiempoUltimoHuevo = tiempoActual;
-        }
-
-        // Mover huevos
-        actualizar_huevos();
-
-        // Colisiones
-        verificar_colisiones(jugador);
-
-        // Fin del ataque
-        if (tiempoActual - inicioAtaque >= 10) {
-            ataqueEnemigoActivo = false;
-            huevos.clear();
-        }
-    }
-
-    // Siempre dibujar huevos (si hay)
-    dibujar_huevos();
     
     room_actual = "B_HUEVINNI-CARELLINI";
     en_ataque = true;
@@ -108,7 +84,7 @@ int main() {
         }
 
         if (room_actual == "B_HUEVINNI-CARELLINI") {
-            crearUI();
+            crearUI(jugador);
             mostrar_textura(HuevinniCarellinni);
 
             if (!en_ataque) {
@@ -120,8 +96,8 @@ int main() {
                 dibujarAlma(jugador.getX(), jugador.getY(), jugador.textura,
                         jugador.collision.x + 12, jugador.collision.y + 10,
                         jugador.collision.width, jugador.collision.height);
+                DrawTexture(corazon, jugador.getX(), jugador.getY(), WHITE);
             }
-            DrawTexture(corazon, jugador.getX(), jugador.getY(), WHITE);
         }
 
         dibujar_huevos();

@@ -87,7 +87,7 @@ extern string texto_caja4;
 extern string texto_caja5;
 extern vector<Huevo> huevos;
 
-void crearUI();
+void crearUI(Jugador jugador);
 void moverPorUI();
 void moverPorBatalla(Jugador& jugador);
 void dibujarAlma(int x, int y, Texture2D textura, int x_collision, int y_collision, float width_collision, float height_collision);

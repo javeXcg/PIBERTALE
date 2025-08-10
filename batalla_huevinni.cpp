@@ -8,11 +8,12 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <string>
 
 using namespace std;
 
 Rectangle cuadrado_batalla = { 400.0f, 250.0f, 210.0f, 210.0f };
-int botones_y = 500;
+int botones_y = 560;
 int boton_seleccionado = 1;
 Color celeste_transparente = {135, 206, 235, 128};
 
@@ -71,7 +72,7 @@ void eliminar_huevos_fuera_pantalla() {
 
 
 
-void crearUI() {
+void crearUI(Jugador jugador) {
     DrawRectangleLines(cuadrado_batalla.x, cuadrado_batalla.y, cuadrado_batalla.width, cuadrado_batalla.height, WHITE); // CUADRO DE BATALLA
 
     if (en_ataque == false) {
@@ -87,6 +88,19 @@ void crearUI() {
     DrawTexture(boton_seleccionado == 2 ? boton_hablar_hover : boton_hablar, 350, botones_y, WHITE);
     DrawTexture(boton_seleccionado == 3 ? boton_item_hover   : boton_item,   550, botones_y, WHITE);
     DrawTexture(boton_seleccionado == 4 ? boton_mercy_hover  : boton_mercy,  750, botones_y, WHITE);
+
+    DrawText(jugador.nombre.c_str(), 150, 510, 30, WHITE);
+
+    // Concatenar texto fijo con número convertido a string
+    std::string nivel_str = "NO: " + std::to_string(nivel_de_odio);
+    DrawText(nivel_str.c_str(), 250, 510, 30, WHITE);
+
+    // Mostrar vida actual y vida máxima juntos con el formato "vida / vida_maxima"
+    std::string vida_str = std::to_string(vida);
+    std::string vida_maxima_str = std::to_string(vida_maxima);
+    std::string vida_total_str = vida_str + " / " + vida_maxima_str;
+    DrawText(vida_total_str.c_str(), 600, 510, 30, WHITE);
+
 }
 
 void moverPorUI() {

@@ -54,6 +54,7 @@ using namespace std;
 
 extern string room_actual;
 extern int vida;
+extern int vida_maxima;
 extern int nivel_de_odio;
 extern bool en_ataque;
 extern int boton;
