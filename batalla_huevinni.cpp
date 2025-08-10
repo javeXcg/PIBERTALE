@@ -21,32 +21,32 @@ Color celeste_transparente = {135, 206, 235, 128};
 int VelocidadY = 5;
 
 //X y Y del guevo
-int huevosx = 480;
-int huevosy = 170;
+int ataquesx = 480;
+int ataquesy = 170;
 
 // Vector global o externo
-vector<Huevo> huevos;
+vector<AtaqueObjeto> ataques;
 
 // Generar un nuevo huevo y agregar al vector
-void generar_huevos(Texture2D textura) {
+void generar_ataques(Texture2D textura) {
     float posX = GetRandomValue((int)cuadrado_batalla.x, (int)(cuadrado_batalla.x + cuadrado_batalla.width - textura.width));
     float posY = cuadrado_batalla.y - textura.height;
     float velocidad = 4.0f;
-    huevos.emplace_back(posX, posY, velocidad, textura);
+    ataques.emplace_back(posX, posY, velocidad, textura);
 }
 
 // Actualizar posiciones de todos los huevos
-void actualizar_huevos() {
-    for (auto& h : huevos) {
+void actualizar_ataques() {
+    for (auto& h : ataques) {
         h.mover();
     }
     // Aquí puedes borrar huevos que se salgan de pantalla si quieres
 }
 
 // Dibujar todos los huevos en pantalla
-void dibujar_huevos() {
-    for (auto& h : huevos) {
-        h.dibujar();
+void dibujar_ataques() {
+    for (auto& a : ataques) {
+        a.dibujar();
     }
 }
 
@@ -55,8 +55,8 @@ void verificar_colisiones(Jugador& jugador) {
     Rectangle jugadorRect = jugador.collision;
 
     if (!invencible) { // solo puede dañar si no está invencible
-        for (auto& h : huevos) {
-            if (CheckCollisionRecs(jugadorRect, h.getCollisionRect())) {
+        for (auto& a : ataques) {
+            if (CheckCollisionRecs(jugadorRect, a.getCollisionRect())) {
                 cout << "Jugador golpeado por huevo!" << endl;
                 vida -= 4;
 
@@ -78,12 +78,12 @@ void actualizar_invencibilidad() {
     }
 }
 
-void eliminar_huevos_fuera_pantalla() {
-    huevos.erase(
-        std::remove_if(huevos.begin(), huevos.end(), [](const Huevo& h) {
+void eliminar_ataques_fuera_pantalla() {
+    ataques.erase(
+        std::remove_if(ataques.begin(), ataques.end(), [](const AtaqueObjeto& h) {
             return h.y >= 500;  // Si el huevo bajó más que la pantalla, lo borramos
         }),
-        huevos.end()
+        ataques.end()
     );
 }
 

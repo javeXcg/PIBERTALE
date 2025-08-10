@@ -81,21 +81,21 @@ int main() {
             // Generar huevo cada intervalo
             if (tiempoActual - tiempoUltimoHuevo >= 0.5) {
                 tiempoUltimoHuevo = tiempoActual;
-                generar_huevos(huevo_ataque); // Asegúrate de llamar a esta función aquí
+                generar_ataques(huevo_ataque); // Asegúrate de llamar a esta función aquí
             }
 
             // Mover huevos
-            actualizar_huevos();
+            actualizar_ataques();
 
             // Colisiones
             verificar_colisiones(jugador);
             actualizar_invencibilidad();
-            eliminar_huevos_fuera_pantalla();
+            eliminar_ataques_fuera_pantalla();
 
             // Fin del ataque
             if (tiempoActual - inicioAtaque >= 10) {
                 ataqueEnemigoActivo = false;
-                huevos.clear();
+                ataques.clear();
             }
         }
 
@@ -136,7 +136,7 @@ int main() {
             }
         }
 
-        dibujar_huevos();
+        dibujar_ataques();
 
         if (IsKeyPressed(KEY_F1)) {
             if (en_ataque == true) { cambiarCuadradoDeBatalla(2); }

@@ -45,7 +45,7 @@ public:
     int getY() const { return y; }
 };
 
-class Huevo {
+class AtaqueObjeto {
 public:
     float x;
     float y;
@@ -53,7 +53,7 @@ public:
     Texture2D textura;
     Rectangle collision;
 
-    Huevo(float x_init, float y_init, float velY, Texture2D tex) 
+    AtaqueObjeto(float x_init, float y_init, float velY, Texture2D tex) 
         : x(x_init), y(y_init), velocidadY(velY), textura(tex) 
     {
         collision.width = static_cast<float>(textura.width);
@@ -89,7 +89,7 @@ extern string texto_caja2;
 extern string texto_caja3;
 extern string texto_caja4;
 extern string texto_caja5;
-extern vector<Huevo> huevos;
+extern vector<AtaqueObjeto> ataques;
 extern vector<string> estructura_batalla_carellinni;
 
 void crearUI(Jugador jugador);
@@ -98,12 +98,12 @@ void moverPorBatalla(Jugador& jugador);
 void dibujarAlma(int x, int y, Texture2D textura, int x_collision, int y_collision, float width_collision, float height_collision);
 void cambiarCuadradoDeBatalla(int caso);
 void mostrar_textura(Texture2D textura);
-void actualizar_huevos();
-void dibujar_huevos();
+void actualizar_ataques();
+void dibujar_ataques();
 void verificar_colisiones(Jugador &jugador);
 void actualizar_invencibilidad();
-void generar_huevos(Texture2D textura);
-void eliminar_huevos_fuera_pantalla();
+void generar_ataques(Texture2D textura);
+void eliminar_ataques_fuera_pantalla();
 
 #endif 
 
