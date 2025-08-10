@@ -53,10 +53,27 @@ void dibujar_huevos() {
 // Verificar colisiones entre huevos y jugador
 void verificar_colisiones(Jugador& jugador) {
     Rectangle jugadorRect = jugador.collision;
-    for (auto& h : huevos) {
-        if (CheckCollisionRecs(jugadorRect, h.getCollisionRect())) {
-            cout << "Jugador golpeado por huevo!" << endl;
-            // Lógica de daño o efecto aquí
+
+    if (!invencible) { // solo puede dañar si no está invencible
+        for (auto& h : huevos) {
+            if (CheckCollisionRecs(jugadorRect, h.getCollisionRect())) {
+                cout << "Jugador golpeado por huevo!" << endl;
+                vida -= 4;
+
+                invencible = true;
+                tiempoInvencibleInicio = GetTime(); // tiempo actual en segundos
+                break; // salgo porque ya fue golpeado y no quiero restar más vida en este frame
+            }
+        }
+    }
+}
+
+// En tu update principal (game loop) llama esta función para actualizar invencibilidad
+void actualizar_invencibilidad() {
+    if (invencible) {
+        float tiempoActual = GetTime();
+        if (tiempoActual - tiempoInvencibleInicio >= DURACION_INVENCIBLE) {
+            invencible = false;
         }
     }
 }
@@ -64,7 +81,7 @@ void verificar_colisiones(Jugador& jugador) {
 void eliminar_huevos_fuera_pantalla() {
     huevos.erase(
         std::remove_if(huevos.begin(), huevos.end(), [](const Huevo& h) {
-            return h.y >= 100;  // Si el huevo bajó más que la pantalla, lo borramos
+            return h.y >= 500;  // Si el huevo bajó más que la pantalla, lo borramos
         }),
         huevos.end()
     );
@@ -75,12 +92,35 @@ void eliminar_huevos_fuera_pantalla() {
 void crearUI(Jugador jugador) {
     DrawRectangleLines(cuadrado_batalla.x, cuadrado_batalla.y, cuadrado_batalla.width, cuadrado_batalla.height, WHITE); // CUADRO DE BATALLA
 
-    if (en_ataque == false) {
-        DrawText(texto_caja1.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 10, 30, WHITE);
-        DrawText(texto_caja2.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 50, 30, WHITE);
-        DrawText(texto_caja3.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 90, 30, WHITE);
-        DrawText(texto_caja4.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 130, 30, WHITE);
-        DrawText(texto_caja5.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 170, 30, WHITE);
+    if (mostrar_datos) {
+        DrawText(TextFormat("Vida de enemigo: %i", vida_enemigo), 10, 10, 20, WHITE);
+        DrawText(TextFormat("Turno: %i", turno), 10, 40, 20, WHITE);
+        DrawText(TextFormat("En ataque: %i", en_ataque), 10, 70, 20, WHITE);
+        DrawText(TextFormat("X: %i Y: %i", jugador.getX(), jugador.getY()), 10, 100, 20, WHITE);
+        DrawText(TextFormat("Boton: %i", boton_seleccionado), 10, 130, 20, WHITE);
+        DrawText(TextFormat("Mostrar colisiones: %i", mostrar_colisiones), 10, 160, 20, WHITE);
+        DrawText(TextFormat("Accion: %s", accion.c_str()), 10, 190, 20, WHITE);
+    }
+
+    if (!en_ataque) {
+        if (accion == " ") {
+            DrawText(texto_caja1.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 10, 30, WHITE);
+            DrawText(texto_caja2.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 50, 30, WHITE);
+            DrawText(texto_caja3.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 90, 30, WHITE);
+            DrawText(texto_caja4.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 130, 30, WHITE);
+            DrawText(texto_caja5.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 170, 30, WHITE);
+        } else {
+            if (accion == "hacer golpe") {
+                DrawTexture(cuadro_golpe, cuadrado_batalla.x, cuadrado_batalla.y + 2, WHITE);
+
+                if (IsKeyPressed(KEY_ENTER)) {
+                    accion = " ";
+                    turno += 1;
+                    en_ataque = true;
+                    cambiarCuadradoDeBatalla(1);
+                }
+            }
+        }
     }
     
     //BOTONES

@@ -70,6 +70,10 @@ public:
 
     void dibujar() {
         DrawTexture(textura, (int)x, (int)y, WHITE);
+
+        if (mostrar_colisiones == true) {
+            DrawRectangle(collision.x, collision.y, collision.width, collision.height, WHITE);
+        }
     }
 
     Rectangle getCollisionRect() const {
@@ -86,6 +90,7 @@ extern string texto_caja3;
 extern string texto_caja4;
 extern string texto_caja5;
 extern vector<Huevo> huevos;
+extern vector<string> estructura_batalla_carellinni;
 
 void crearUI(Jugador jugador);
 void moverPorUI();
@@ -96,6 +101,7 @@ void mostrar_textura(Texture2D textura);
 void actualizar_huevos();
 void dibujar_huevos();
 void verificar_colisiones(Jugador &jugador);
+void actualizar_invencibilidad();
 void generar_huevos(Texture2D textura);
 void eliminar_huevos_fuera_pantalla();
 

@@ -15,6 +15,7 @@ extern Texture2D boton_luchar_hover;
 extern Texture2D boton_item_hover;
 extern Texture2D boton_hablar_hover;
 extern Texture2D boton_mercy_hover;
+extern Texture2D cuadro_golpe;
 
 extern Texture2D huevo_ataque;
 extern Texture2D martillo_ataque;

@@ -59,7 +59,15 @@ extern int nivel_de_odio;
 extern bool en_ataque;
 extern int boton;
 extern bool mostrar_colisiones;
+extern bool mostrar_datos;
 extern Color celeste_transparente;
+extern int vida_enemigo;
+extern int vida_maxima_enemigo;
+extern int turno;
+extern string accion;
+extern bool invencible;
+extern float tiempoInvencibleInicio;
+extern const float DURACION_INVENCIBLE;
 
 std::vector<std::string> adaptar_dialogo(const std::string &dialogo, size_t limite = 45);
 

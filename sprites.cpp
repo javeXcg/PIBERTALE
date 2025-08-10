@@ -12,6 +12,7 @@ Texture2D boton_luchar_hover;
 Texture2D boton_item_hover;
 Texture2D boton_hablar_hover;
 Texture2D boton_mercy_hover;
+Texture2D cuadro_golpe;
 
 Texture2D huevo_ataque;
 Texture2D martillo_ataque;
@@ -29,6 +30,7 @@ void cargarSprites() {
     boton_item_hover    = LoadTexture("sprites/boton_item_hover.png");
     boton_hablar_hover  = LoadTexture("sprites/boton_hablar_hover.png");
     boton_mercy_hover   = LoadTexture("sprites/boton_mercy_hover.png");
+    cuadro_golpe        = LoadTexture("sprites/cuadro_golpe.png");
 
     huevo_ataque        = LoadTexture("sprites/huevo_ataque.png");
     martillo_ataque     = LoadTexture("sprites/martillo_ataque.png");
@@ -48,6 +50,7 @@ void liberarSprites() {
     UnloadTexture(boton_item_hover);
     UnloadTexture(boton_hablar_hover);
     UnloadTexture(boton_mercy_hover);
+    UnloadTexture(cuadro_golpe);
 
     UnloadTexture(huevo_ataque);
     UnloadTexture(martillo_ataque);
