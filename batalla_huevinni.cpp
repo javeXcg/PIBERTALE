@@ -100,6 +100,8 @@ void crearUI(Jugador jugador) {
         DrawText(TextFormat("Boton: %i", boton_seleccionado), 10, 130, 20, WHITE);
         DrawText(TextFormat("Mostrar colisiones: %i", mostrar_colisiones), 10, 160, 20, WHITE);
         DrawText(TextFormat("Accion: %s", accion.c_str()), 10, 190, 20, WHITE);
+        DrawText(TextFormat("Invencible: %i", invencible), 10, 220, 20, WHITE);
+        DrawText(TextFormat("Vida: %i", vida), 10, 250, 20, WHITE);
     }
 
     if (!en_ataque) {

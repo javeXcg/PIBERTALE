@@ -10,8 +10,8 @@ class Jugador {
 private:
     int x;
     int y;
-    const float margen_x = 15.0f;
-    const float margen_y = 8.0f;
+    const float margen_x = 14.0f;
+    const float margen_y = 14.0f;
 
     void actualizarCollision() {
         collision.x = static_cast<float>(x) + margen_x / 2.0f;
@@ -56,8 +56,8 @@ public:
     AtaqueObjeto(float x_init, float y_init, float velY, Texture2D tex) 
         : x(x_init), y(y_init), velocidadY(velY), textura(tex) 
     {
-        collision.width = static_cast<float>(textura.width);
-        collision.height = static_cast<float>(textura.height);
+        collision.width = static_cast<float>(textura.width) - 5.0;
+        collision.height = static_cast<float>(textura.height - 2.0);
         collision.x = x;
         collision.y = y;
     }
@@ -72,7 +72,7 @@ public:
         DrawTexture(textura, (int)x, (int)y, WHITE);
 
         if (mostrar_colisiones == true) {
-            DrawRectangle(collision.x, collision.y, collision.width, collision.height, WHITE);
+            DrawRectangle(collision.x, collision.y, collision.width, collision.height, celeste_transparente);
         }
     }
 
