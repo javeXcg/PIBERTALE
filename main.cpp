@@ -31,16 +31,24 @@ string texto_caja2;
 string texto_caja3;
 string texto_caja4;
 string texto_caja5;
-bool ataqueEnemigoActivo = true;
+bool ataqueEnemigoActivo = false;
 double inicioAtaque = GetTime();
 double tiempoUltimoHuevo = GetTime();
 vector<string> estructura_batalla_carellinni = {"caida_huevos", "martillos_costados", "martillos_saltarines"};
 string accion;
-int turno;
-int vida_enemigo;
+int turno = 0;
+int vida_enemigo = 300;
 bool invencible = false;
 float tiempoInvencibleInicio = 0.0f;
-const float DURACION_INVENCIBLE = 1.5f; 
+const float DURACION_INVENCIBLE = 0.8f;
+
+vector<string> ataques_toda_batalla_carellinni = {
+    "ataque_desde_arriba",
+    "ataque_desde_arriba",
+    "ataque_desde_arriba",
+    "ataque_desde_arriba",
+    "ataque_desde_arriba",
+};
 
 void manejarRoom(Jugador jugador) {
     if (room_actual == "B_HUEVINNI-CARELLINI") {
@@ -72,39 +80,25 @@ int main() {
     texto_caja5 = dialogo[4];
 
     while (!WindowShouldClose()) {
+        if (vida <= 0) {
+            CloseWindow();
+        }
+
         float tiempoActual = GetTime();
 
         BeginDrawing();
         ClearBackground(BLACK);
 
-        if (ataqueEnemigoActivo) {
-            // Generar huevo cada intervalo
-            if (tiempoActual - tiempoUltimoHuevo >= 0.3) {
-                tiempoUltimoHuevo = tiempoActual;
-                generar_ataques(huevo_ataque); // Asegúrate de llamar a esta función aquí
-            }
-
-            // Mover huevos
-            actualizar_ataques();
-
-            // Colisiones
-            verificar_colisiones(jugador);
-            actualizar_invencibilidad();
-            eliminar_ataques_fuera_pantalla();
-
-            // Fin del ataque
-            if (tiempoActual - inicioAtaque >= 10) {
-                ataqueEnemigoActivo = false;
-                en_ataque = false;
-                cambiarCuadradoDeBatalla(2);
-                ataques.clear();
-            }
-        }
-
         if (room_actual == "B_HUEVINNI-CARELLINI") {
             crearUI(jugador);
             mostrar_textura(HuevinniCarellinni);
 
+            cout << "En ataque" << ataqueEnemigoActivo << endl;
+
+            if (en_ataque) {
+                leer_ataques(ataques_toda_batalla_carellinni, turno,tiempoActual, tiempoUltimoHuevo, jugador, inicioAtaque);
+            }
+            
             if (!en_ataque) {
                 moverPorUI();
                 if (IsKeyPressed(KEY_ENTER)) {
@@ -138,7 +132,6 @@ int main() {
                 dibujarAlma(jugador.getX(), jugador.getY(), jugador.textura,
                         jugador.collision.x + 12, jugador.collision.y + 10,
                         jugador.collision.width, jugador.collision.height);
-                
             }
         }
 

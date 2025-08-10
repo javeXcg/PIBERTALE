@@ -68,6 +68,7 @@ extern string accion;
 extern bool invencible;
 extern float tiempoInvencibleInicio;
 extern const float DURACION_INVENCIBLE;
+extern bool ataqueEnemigoActivo;
 
 std::vector<std::string> adaptar_dialogo(const std::string &dialogo, size_t limite = 45);
 

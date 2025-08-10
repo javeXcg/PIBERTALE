@@ -27,6 +27,46 @@ int ataquesy = 170;
 // Vector global o externo
 vector<AtaqueObjeto> ataques;
 
+void leer_ataques(const std::vector<std::string>& ataques_toda_batalla, int turno, double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double& inicioAtaque) {
+    cout << "verificando ataque" << endl;
+    if (!ataqueEnemigoActivo) {
+        cout << "verificando tipo de ataque" << endl;
+        if (ataques_toda_batalla[turno] == "ataque_desde_arriba") {
+            cout << "iniciando ataque desde arriba" << endl;
+            ataqueEnemigoActivo = true;
+            inicioAtaque = tiempoActual;  // marcar cuando inicia
+            tiempoUltimoHuevo = tiempoActual;
+        }
+    }
+
+    // Si el ataque está activo, ejecutar la lógica de ese ataque
+    if (ataqueEnemigoActivo) {
+        ataque_desde_arriba(tiempoActual, tiempoUltimoHuevo, jugador, inicioAtaque);
+    }
+}
+
+void ataque_desde_arriba(double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double inicioAtaque) {
+    if (ataqueEnemigoActivo) {
+        if (tiempoActual - tiempoUltimoHuevo >= 0.7) {
+            tiempoUltimoHuevo = tiempoActual;
+            generar_ataques(huevo_ataque);
+        }
+
+        actualizar_ataques();
+        verificar_colisiones(jugador);
+        actualizar_invencibilidad();
+        eliminar_ataques_fuera_pantalla();
+
+        if (tiempoActual - inicioAtaque >= 10) {
+            ataqueEnemigoActivo = false;
+            en_ataque = false;
+            cambiarCuadradoDeBatalla(2);
+            ataques.clear();
+        }
+    }
+}
+
+
 // Generar un nuevo huevo y agregar al vector
 void generar_ataques(Texture2D textura) {
     float posX = GetRandomValue((int)cuadrado_batalla.x, (int)(cuadrado_batalla.x + cuadrado_batalla.width - textura.width));
@@ -102,6 +142,7 @@ void crearUI(Jugador jugador) {
         DrawText(TextFormat("Accion: %s", accion.c_str()), 10, 190, 20, WHITE);
         DrawText(TextFormat("Invencible: %i", invencible), 10, 220, 20, WHITE);
         DrawText(TextFormat("Vida: %i", vida), 10, 250, 20, WHITE);
+         DrawText(TextFormat("Ataque Enemigo Activo: %i", ataqueEnemigoActivo), 10, 280, 20, WHITE);
     }
 
     if (!en_ataque) {
@@ -119,6 +160,7 @@ void crearUI(Jugador jugador) {
                     accion = " ";
                     turno += 1;
                     en_ataque = true;
+                    vida_enemigo -= 30;
                     cambiarCuadradoDeBatalla(1);
                 }
             }
@@ -200,6 +242,7 @@ void dibujarAlma(int x, int y, Texture2D textura, int x_collision, int y_collisi
 
 void mostrar_textura(Texture2D textura){
     DrawTexture(textura, 420, 75, WHITE);
+    DrawText(TextFormat("VIDA: %i", vida_enemigo), 420, 30, 35, WHITE);
 }
 
 void cambiarCuadradoDeBatalla(int caso) {
