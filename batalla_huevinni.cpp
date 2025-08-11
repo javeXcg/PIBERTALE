@@ -95,7 +95,7 @@ void leer_ataques(const std::vector<std::string>& ataques_toda_batalla, int turn
 
 void ataque_desde_arriba(double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double inicioAtaque) {
     if (ataqueEnemigoActivo) {
-        if (tiempoActual - tiempoUltimoHuevo >= 0.1) {
+        if (tiempoActual - tiempoUltimoHuevo >= 0.12) {
             tiempoUltimoHuevo = tiempoActual;
             generar_ataques(huevo_ataque, 
                 cuadrado_batalla.x, 
@@ -103,7 +103,7 @@ void ataque_desde_arriba(double tiempoActual, double& tiempoUltimoHuevo, Jugador
                 cuadrado_batalla.y - 20, 
                 cuadrado_batalla.y - 20, 
                 0.0f,    // velocidad horizontal 0 para ataque desde arriba
-                5.0f);   // velocidad vertical hacia abajo
+                4.7f);   // velocidad vertical hacia abajo
         }
 
         actualizar_ataques();
