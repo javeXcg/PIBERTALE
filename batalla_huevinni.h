@@ -50,21 +50,22 @@ public:
     float x;
     float y;
     float velocidadY;
+    float velocidadX;
     Texture2D textura;
     Rectangle collision;
 
-    AtaqueObjeto(float x_init, float y_init, float velY, Texture2D tex) 
-        : x(x_init), y(y_init), velocidadY(velY), textura(tex) 
+    AtaqueObjeto(float x_init, float y_init, float velX, float velY, Texture2D tex) 
+        : x(x_init), y(y_init), velocidadX(velX), velocidadY(velY), textura(tex) 
     {
         collision.width  = static_cast<float>(textura.width) - 5.0f;
         collision.height = static_cast<float>(textura.height) - 2.0f;
 
-        // Centrar colisión respecto a la textura
         collision.x = x + (textura.width  - collision.width)  / 2.0f;
         collision.y = y + (textura.height - collision.height) / 2.0f;
     }
 
     void mover() {
+        x += velocidadX;
         y += velocidadY;
         collision.x = x + (textura.width  - collision.width)  / 2.0f;
         collision.y = y + (textura.height - collision.height) / 2.0f;
@@ -104,11 +105,15 @@ void actualizar_ataques();
 void dibujar_ataques();
 void verificar_colisiones(Jugador &jugador);
 void actualizar_invencibilidad();
-void generar_ataques(Texture2D textura);
+void generar_ataques(Texture2D textura,
+                     float rangoX_min, float rangoX_max,
+                     float rangoY_min, float rangoY_max,
+                     float velocidadX = 0.0f, float velocidadY = 5.0f);
 void eliminar_ataques_fuera_pantalla();
 void ataque_desde_arriba(double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double inicioAtaque);
 void leer_ataques(const std::vector<std::string>& ataques_toda_batalla, int turno, double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double& inicioAtaque);
 void procesarAtaque();
+void ataque_desde_costados(double tiempoActual, double &tiempoUltimoHuevo, Jugador &jugador, double inicioAtaque);
 
 #endif 
 

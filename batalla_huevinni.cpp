@@ -71,27 +71,81 @@ void procesarAtaque() {
     }
 }
 
-
 void leer_ataques(const std::vector<std::string>& ataques_toda_batalla, int turno, double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double& inicioAtaque) {
     if (!ataqueEnemigoActivo) {
-        if (ataques_toda_batalla[turno] == "ataque_desde_arriba") {
+        if (ataques_toda_batalla[turno] == "ataque_desde_arriba" || ataques_toda_batalla[turno] == "ataque_desde_costados") {
             ataqueEnemigoActivo = true;
             inicioAtaque = tiempoActual;  // marcar cuando inicia
             tiempoUltimoHuevo = tiempoActual;
         }
     }
 
-    // Si el ataque está activo, ejecutar la lógica de ese ataque
     if (ataqueEnemigoActivo) {
-        ataque_desde_arriba(tiempoActual, tiempoUltimoHuevo, jugador, inicioAtaque);
+        const std::string& ataque_actual = ataques_toda_batalla[turno];
+        
+        if (ataque_actual == "ataque_desde_arriba") {
+            ataque_desde_arriba(tiempoActual, tiempoUltimoHuevo, jugador, inicioAtaque);
+        }
+        else if (ataque_actual == "ataque_desde_costados") {
+            ataque_desde_costados(tiempoActual, tiempoUltimoHuevo, jugador, inicioAtaque);
+        }
+        // Podés agregar más else if para otros ataques
     }
 }
 
 void ataque_desde_arriba(double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double inicioAtaque) {
     if (ataqueEnemigoActivo) {
+        if (tiempoActual - tiempoUltimoHuevo >= 0.1) {
+            tiempoUltimoHuevo = tiempoActual;
+            generar_ataques(huevo_ataque, 
+                cuadrado_batalla.x, 
+                cuadrado_batalla.x + cuadrado_batalla.width, 
+                cuadrado_batalla.y - 20, 
+                cuadrado_batalla.y - 20, 
+                0.0f,    // velocidad horizontal 0 para ataque desde arriba
+                5.0f);   // velocidad vertical hacia abajo
+        }
+
+        actualizar_ataques();
+        verificar_colisiones(jugador);
+        actualizar_invencibilidad();
+        eliminar_ataques_fuera_pantalla();
+
+        if (tiempoActual - inicioAtaque >= 10) {
+            ataqueEnemigoActivo = false;
+            en_ataque = false;
+            cambiarCuadradoDeBatalla(2);
+            ataques.clear();
+        }
+    }
+}
+
+void ataque_desde_costados(double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double inicioAtaque) {
+    if (ataqueEnemigoActivo) {
         if (tiempoActual - tiempoUltimoHuevo >= 0.2) {
             tiempoUltimoHuevo = tiempoActual;
-            generar_ataques(huevo_ataque);
+
+            // Ataque desde el lado izquierdo: posición fija a la izquierda, velocidad hacia la derecha (+X)
+            generar_ataques(
+                martillo_ataque,
+                cuadrado_batalla.x - 50 - martillo_ataque.width,  // rangoX_min fijo a la izquierda (un punto fijo)
+                cuadrado_batalla.x - 50 - martillo_ataque.width,  // rangoX_max igual para fijar posición
+                cuadrado_batalla.y - 20,
+                cuadrado_batalla.y + cuadrado_batalla.height,
+                7.0f,   // velocidad en X (derecha)
+                0.0f    // velocidad en Y (sin movimiento vertical)
+            );
+
+            // Ataque desde el lado derecho: posición fija a la derecha, velocidad hacia la izquierda (-X)
+            generar_ataques(
+                martillo_ataque,
+                cuadrado_batalla.x + cuadrado_batalla.width + 50,  // rangoX_min fijo derecha
+                cuadrado_batalla.x + cuadrado_batalla.width + 50,  // rangoX_max igual
+                cuadrado_batalla.y - 20,
+                cuadrado_batalla.y + cuadrado_batalla.height,
+                -7.0f,  // velocidad en X (izquierda)
+                0.0f    // velocidad en Y (sin movimiento vertical)
+            );
         }
 
         actualizar_ataques();
@@ -109,13 +163,18 @@ void ataque_desde_arriba(double tiempoActual, double& tiempoUltimoHuevo, Jugador
 }
 
 
+
 // Generar un nuevo huevo y agregar al vector
-void generar_ataques(Texture2D textura) {
-    float posX = GetRandomValue((int)cuadrado_batalla.x, (int)(cuadrado_batalla.x + cuadrado_batalla.width - textura.width));
-    float posY = cuadrado_batalla.y - textura.height;
-    float velocidad = 5.0f;
-    ataques.emplace_back(posX, posY, velocidad, textura);
+void generar_ataques(Texture2D textura,
+                     float rangoX_min, float rangoX_max,
+                     float rangoY_min, float rangoY_max,
+                     float velocidadX, float velocidadY) {
+    float posX = GetRandomValue((int)rangoX_min, (int)rangoX_max - (int)textura.width);
+    float posY = GetRandomValue((int)rangoY_min, (int)rangoY_max - (int)textura.height);
+
+    ataques.emplace_back(posX, posY, velocidadX, velocidadY, textura);
 }
+
 
 // Actualizar posiciones de todos los huevos
 void actualizar_ataques() {
@@ -161,7 +220,7 @@ void verificar_colisiones(Jugador& jugador) {
 
         if (golpeado) {
             std::lock_guard<std::mutex> lock(vidaMutex);
-            std::cout << "Jugador golpeado por huevo!" << std::endl;
+            std::cout << "Jugador golpeado!" << std::endl;
             vida -= 4;
             invencible = true;
             tiempoInvencibleInicio = GetTime();
@@ -182,12 +241,13 @@ void actualizar_invencibilidad() {
 void eliminar_ataques_fuera_pantalla() {
     ataques.erase(
         std::remove_if(ataques.begin(), ataques.end(), [](const AtaqueObjeto& h) {
-            return h.y >= 500;  // Si el huevo bajó más que la pantalla, lo borramos
+            bool fuera_x = h.x < cuadrado_batalla.x - 50 || h.x > cuadrado_batalla.x + cuadrado_batalla.width + 50;
+            bool fuera_y = h.y < cuadrado_batalla.y - 50 || h.y > cuadrado_batalla.y + cuadrado_batalla.height + 50;
+            return fuera_x || fuera_y;
         }),
         ataques.end()
     );
 }
-
 
 
 void crearUI(Jugador jugador) {
