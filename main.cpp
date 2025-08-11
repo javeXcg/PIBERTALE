@@ -23,6 +23,7 @@ using json = nlohmann::json;
 #endif
 
 string room_actual;
+string room_anterior = " ";
 int vida = 30;
 int vida_maxima = 30;
 int nivel_de_odio = 5;
@@ -44,6 +45,24 @@ int vida_enemigo = 350;
 bool invencible = false;
 float tiempoInvencibleInicio = 0.0f;
 const float DURACION_INVENCIBLE = 0.8f;
+int movimiento_cuadrado_batalla_x = 0;
+int movimiento_cuadrado_batalla_y = 0;
+bool jugador_atacando = false;
+int dano;
+Music musica_actual;
+bool musica_cargada = false;
+
+void cambiarMusica(const char* archivo_musica) {
+    if (musica_cargada) {
+        StopMusicStream(musica_actual);
+        UnloadMusicStream(musica_actual);
+        musica_cargada = false;
+    }
+    musica_actual = LoadMusicStream(archivo_musica);
+    PlayMusicStream(musica_actual);
+    musica_cargada = true;
+}
+
 
 vector<string> ataques_toda_batalla_carellinni = {
     "ataque_desde_arriba",
@@ -95,11 +114,14 @@ void manejarRoom(Jugador jugador) {
 }
 
 int main() {
-    const int screenWidth = 1000;
-    const int screenHeight = 670;
+    const int screenWidth = 1050;
+    const int screenHeight = 680;
 
     InitWindow(screenWidth, screenHeight, "Pibertale");
+    InitAudioDevice();
     SetTargetFPS(60);
+
+    Music carellis_theme = LoadMusicStream("carelliTHEME.mp3");
     
     Jugador jugador(500, 300, 90, "Fran", corazon);
     
@@ -113,6 +135,21 @@ int main() {
         if (vida <= 0) {
             CloseWindow();
         }
+
+        SetMusicVolume(musica_actual, 0.1f);
+
+        if (room_actual != room_anterior) {
+            room_anterior = room_actual;
+            if (room_actual == "B_HUEVINNI-CARELLINI") {
+                cambiarMusica("carelliTHEME.mp3");
+            }
+        }
+
+        if (musica_cargada) {
+            UpdateMusicStream(musica_actual);
+        }
+
+        SetMusicVolume(musica_actual, 0.1f);
 
         float tiempoActual = GetTime();
 
@@ -128,28 +165,35 @@ int main() {
                 leer_ataques(ataques_toda_batalla_carellinni, turno,tiempoActual, tiempoUltimoHuevo, jugador, inicioAtaque);
             }
             
-            if (!en_ataque) {
-                moverPorUI();
-                if (IsKeyPressed(KEY_ENTER)) {
-                    switch (boton_seleccionado) {
-                    case 1:
-                        accion = "hacer golpe";
-                        break;
-                    case 2:
-                        accion = "hablar";
-                        break;
-                    case 3:
-                        accion = "item";
-                        break;
-                    case 4:
-                        accion = "piedad";
-                        break;
-                    default:
-                        accion = " ";
-                        break;
+        if (!en_ataque) {
+            moverPorUI();
+
+                if (accion == "hacer golpe") {
+                    procesarAtaque();
+                } else {
+                    // Aquí el ENTER para elegir la acción cuando no está atacando
+                    if (IsKeyPressed(KEY_ENTER)) {
+                        switch (boton_seleccionado) {
+                        case 1:
+                            accion = "hacer golpe";
+                            jugador_atacando = true;
+                            break;
+                        case 2:
+                            accion = "hablar";
+                            break;
+                        case 3:
+                            accion = "item";
+                            break;
+                        case 4:
+                            accion = "piedad";
+                            break;
+                        default:
+                            accion = " ";
+                            break;
+                        }
                     }
                 }
-            }
+        }
 
             if (en_ataque) {
                 moverPorBatalla(jugador);
@@ -183,7 +227,11 @@ int main() {
 
         EndDrawing();
     }
-
+    if (musica_cargada) {
+        StopMusicStream(musica_actual);
+        UnloadMusicStream(musica_actual);
+    }
+    CloseAudioDevice();
 
     liberarSprites();
     CloseWindow();

@@ -108,6 +108,7 @@ void generar_ataques(Texture2D textura);
 void eliminar_ataques_fuera_pantalla();
 void ataque_desde_arriba(double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double inicioAtaque);
 void leer_ataques(const std::vector<std::string>& ataques_toda_batalla, int turno, double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double& inicioAtaque);
+void procesarAtaque();
 
 #endif 
 

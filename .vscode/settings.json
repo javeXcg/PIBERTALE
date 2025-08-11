@@ -75,6 +75,10 @@
         "unordered_map": "cpp",
         "valarray": "cpp",
         "xhash": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "condition_variable": "cpp",
+        "coroutine": "cpp",
+        "resumable": "cpp",
+        "future": "cpp"
     }
 }

@@ -13,6 +13,7 @@
 #include <atomic>
 #include <mutex>
 #include <future>
+#include <cmath>
 
 using namespace std;
 
@@ -30,6 +31,46 @@ int ataquesy = 170;
 
 // Vector global o externo
 vector<AtaqueObjeto> ataques;
+
+void procesarAtaque() {
+    DrawTexture(cuadro_golpe, cuadrado_batalla.x, cuadrado_batalla.y + 2, WHITE);
+    DrawRectangle(cuadrado_batalla.x + movimiento_cuadrado_batalla_x, cuadrado_batalla.y + movimiento_cuadrado_batalla_y, 20, cuadrado_batalla.height, SKYBLUE);
+
+    movimiento_cuadrado_batalla_x += 5;
+    if (movimiento_cuadrado_batalla_x > cuadrado_batalla.width) {
+        movimiento_cuadrado_batalla_x = 0;
+    }
+
+    if (IsKeyPressed(KEY_ENTER)) {
+        int danoMaximo = 30;
+        float ancho = cuadrado_batalla.width;
+        float mitad = ancho / 2.0f;
+
+        float posRelativa = movimiento_cuadrado_batalla_x;
+
+        // Calculamos distancia desde la mitad "reflejada":
+        float distanciaAlCentro = fabs(posRelativa - mitad);
+
+        // Esta distancia la convertimos a daño decreciente:
+        // Cuando la distancia sea 0 => daño máximo
+        // Cuando la distancia sea mitad => daño 0
+        int dano = (int)(danoMaximo * (1.0f - distanciaAlCentro / mitad));
+
+        if (dano < 0) dano = 0;
+
+        vida_enemigo -= dano;
+
+        std::cout << "Daño causado: " << dano << std::endl;
+
+        movimiento_cuadrado_batalla_x = 0;
+        accion = " ";
+        jugador_atacando = false;
+        en_ataque = true;
+        cambiarCuadradoDeBatalla(1);
+        turno += 1;
+    }
+}
+
 
 void leer_ataques(const std::vector<std::string>& ataques_toda_batalla, int turno, double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double& inicioAtaque) {
     if (!ataqueEnemigoActivo) {
@@ -162,7 +203,9 @@ void crearUI(Jugador jugador) {
         DrawText(TextFormat("Accion: %s", accion.c_str()), 10, 190, 20, WHITE);
         DrawText(TextFormat("Invencible: %i", invencible), 10, 220, 20, WHITE);
         DrawText(TextFormat("Vida: %i", vida), 10, 250, 20, WHITE);
-         DrawText(TextFormat("Ataque Enemigo Activo: %i", ataqueEnemigoActivo), 10, 280, 20, WHITE);
+        DrawText(TextFormat("Ataque Enemigo Activo: %i", ataqueEnemigoActivo), 10, 280, 20, WHITE);
+        DrawText(TextFormat("CA X: %i", movimiento_cuadrado_batalla_x), 10, 310, 20, WHITE);
+        DrawText(TextFormat("DAÑO: %i", dano), 10, 340, 20, WHITE);
     }
 
     if (!en_ataque) {
@@ -172,20 +215,8 @@ void crearUI(Jugador jugador) {
             DrawText(texto_caja3.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 90, 30, WHITE);
             DrawText(texto_caja4.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 130, 30, WHITE);
             DrawText(texto_caja5.c_str(), cuadrado_batalla.x + 10, cuadrado_batalla.y + 170, 30, WHITE);
-        } else {
-            if (accion == "hacer golpe") {
-                DrawTexture(cuadro_golpe, cuadrado_batalla.x, cuadrado_batalla.y + 2, WHITE);
-
-                if (IsKeyPressed(KEY_ENTER)) {
-                    accion = " ";
-                    turno += 1;
-                    en_ataque = true;
-                    vida_enemigo -= 30;
-                    cambiarCuadradoDeBatalla(1);
-                }
-            }
-        }
-    }
+        } 
+}
     
     //BOTONES
     DrawTexture(boton_seleccionado == 1 ? boton_luchar_hover : boton_luchar, 150, botones_y, WHITE);
@@ -208,6 +239,7 @@ void crearUI(Jugador jugador) {
 }
 
 void moverPorUI() {
+    if (!jugador_atacando) {
         if (IsKeyPressed(KEY_RIGHT)) {
             if (boton_seleccionado != 4) {  //PARA EVITAR QUE SE VAYA MAS ALLA QUE LA CANTIDAD DE BOTONES
                 boton_seleccionado++;
@@ -217,6 +249,7 @@ void moverPorUI() {
                 boton_seleccionado--;
             }
         }
+    }
 }
 
 void moverPorBatalla(Jugador& jugador) {

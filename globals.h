@@ -74,6 +74,12 @@ extern string texto_caja2;
 extern string texto_caja3;
 extern string texto_caja4;
 extern string texto_caja5;
+extern int movimiento_cuadrado_batalla_x;
+extern int movimiento_cuadrado_batalla_y;
+extern bool jugador_atacando;
+extern int dano;
+extern Music musica_actual;
+extern bool musica_cargada;
 
 std::vector<std::string> adaptar_dialogo(const std::string &dialogo, size_t limite = 15);
 void dialogoDelTurno(int turno, const std::vector<std::string> &dialogos);
