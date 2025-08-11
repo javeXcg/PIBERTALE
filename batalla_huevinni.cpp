@@ -9,6 +9,10 @@
 #include <iostream>
 #include <algorithm>
 #include <string>
+#include <thread>
+#include <atomic>
+#include <mutex>
+#include <future>
 
 using namespace std;
 
@@ -18,7 +22,7 @@ int boton_seleccionado = 1;
 Color celeste_transparente = {135, 206, 235, 128};
 
 //Velocidad de caida del huevo
-int VelocidadY = 5;
+int VelocidadY = 6;
 
 //X y Y del guevo
 int ataquesx = 480;
@@ -28,11 +32,8 @@ int ataquesy = 170;
 vector<AtaqueObjeto> ataques;
 
 void leer_ataques(const std::vector<std::string>& ataques_toda_batalla, int turno, double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double& inicioAtaque) {
-    cout << "verificando ataque" << endl;
     if (!ataqueEnemigoActivo) {
-        cout << "verificando tipo de ataque" << endl;
         if (ataques_toda_batalla[turno] == "ataque_desde_arriba") {
-            cout << "iniciando ataque desde arriba" << endl;
             ataqueEnemigoActivo = true;
             inicioAtaque = tiempoActual;  // marcar cuando inicia
             tiempoUltimoHuevo = tiempoActual;
@@ -47,7 +48,7 @@ void leer_ataques(const std::vector<std::string>& ataques_toda_batalla, int turn
 
 void ataque_desde_arriba(double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double inicioAtaque) {
     if (ataqueEnemigoActivo) {
-        if (tiempoActual - tiempoUltimoHuevo >= 0.7) {
+        if (tiempoActual - tiempoUltimoHuevo >= 0.2) {
             tiempoUltimoHuevo = tiempoActual;
             generar_ataques(huevo_ataque);
         }
@@ -90,20 +91,39 @@ void dibujar_ataques() {
     }
 }
 
-// Verificar colisiones entre huevos y jugador
+std::mutex vidaMutex;
+
 void verificar_colisiones(Jugador& jugador) {
     Rectangle jugadorRect = jugador.collision;
+    static std::atomic<bool> golpeado(false);
 
-    if (!invencible) { // solo puede dañar si no está invencible
-        for (auto& a : ataques) {
-            if (CheckCollisionRecs(jugadorRect, a.getCollisionRect())) {
-                cout << "Jugador golpeado por huevo!" << endl;
-                vida -= 4;
+    if (!invencible) {
+        golpeado = false;
 
-                invencible = true;
-                tiempoInvencibleInicio = GetTime(); // tiempo actual en segundos
-                break; // salgo porque ya fue golpeado y no quiero restar más vida en este frame
+        size_t mitad = ataques.size() / 2;
+
+        auto comprobar_rango = [&](size_t inicio, size_t fin) {
+            for (size_t i = inicio; i < fin && !golpeado; ++i) {
+                if (CheckCollisionRecs(jugadorRect, ataques[i].getCollisionRect())) {
+                    golpeado = true;
+                    return;
+                }
             }
+        };
+
+        // Lanza en paralelo y espera el resultado
+        auto f1 = std::async(std::launch::async, comprobar_rango, 0, mitad);
+        auto f2 = std::async(std::launch::async, comprobar_rango, mitad, ataques.size());
+
+        f1.get();
+        f2.get();
+
+        if (golpeado) {
+            std::lock_guard<std::mutex> lock(vidaMutex);
+            std::cout << "Jugador golpeado por huevo!" << std::endl;
+            vida -= 4;
+            invencible = true;
+            tiempoInvencibleInicio = GetTime();
         }
     }
 }

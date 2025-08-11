@@ -69,7 +69,14 @@ extern bool invencible;
 extern float tiempoInvencibleInicio;
 extern const float DURACION_INVENCIBLE;
 extern bool ataqueEnemigoActivo;
+extern string texto_caja1;
+extern string texto_caja2;
+extern string texto_caja3;
+extern string texto_caja4;
+extern string texto_caja5;
 
-std::vector<std::string> adaptar_dialogo(const std::string &dialogo, size_t limite = 45);
+std::vector<std::string> adaptar_dialogo(const std::string &dialogo, size_t limite = 15);
+void dialogoDelTurno(int turno, const std::vector<std::string> &dialogos);
+std::vector<std::string> tomarDialogosDeJson(const std::string &rutaArchivo);
 
 #endif

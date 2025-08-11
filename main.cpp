@@ -7,6 +7,9 @@
 #include <iostream>
 #include <string>
 #include "json.hpp"
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
@@ -20,8 +23,8 @@ using json = nlohmann::json;
 #endif
 
 string room_actual;
-int vida = 88;
-int vida_maxima = 99;
+int vida = 30;
+int vida_maxima = 30;
 int nivel_de_odio = 5;
 bool en_ataque;
 bool mostrar_colisiones;
@@ -37,7 +40,7 @@ double tiempoUltimoHuevo = GetTime();
 vector<string> estructura_batalla_carellinni = {"caida_huevos", "martillos_costados", "martillos_saltarines"};
 string accion;
 int turno = 0;
-int vida_enemigo = 300;
+int vida_enemigo = 350;
 bool invencible = false;
 float tiempoInvencibleInicio = 0.0f;
 const float DURACION_INVENCIBLE = 0.8f;
@@ -102,17 +105,9 @@ int main() {
     
     room_actual = "B_HUEVINNI-CARELLINI";
     en_ataque = true;
- 
+    vector<string> dialogos = tomarDialogosDeJson("dialogos.json");
+
     cargarSprites();
-
-
-    vector<string> dialogo = adaptar_dialogo("El Rey Carellinni bloquea tu paso. Se nota que está muy defensivo...");
-
-    texto_caja1 = dialogo[0];
-    texto_caja2 = dialogo[1];
-    texto_caja3 = dialogo[2];
-    texto_caja4 = dialogo[3];
-    texto_caja5 = dialogo[4];
 
     while (!WindowShouldClose()) {
         if (vida <= 0) {
@@ -125,10 +120,9 @@ int main() {
         ClearBackground(BLACK);
 
         if (room_actual == "B_HUEVINNI-CARELLINI") {
+            dialogoDelTurno(turno, dialogos);
             crearUI(jugador);
             mostrar_textura(HuevinniCarellinni);
-
-            cout << "En ataque" << ataqueEnemigoActivo << endl;
 
             if (en_ataque) {
                 leer_ataques(ataques_toda_batalla_carellinni, turno,tiempoActual, tiempoUltimoHuevo, jugador, inicioAtaque);

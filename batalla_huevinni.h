@@ -56,23 +56,25 @@ public:
     AtaqueObjeto(float x_init, float y_init, float velY, Texture2D tex) 
         : x(x_init), y(y_init), velocidadY(velY), textura(tex) 
     {
-        collision.width = static_cast<float>(textura.width) - 5.0;
-        collision.height = static_cast<float>(textura.height - 2.0);
-        collision.x = x;
-        collision.y = y;
+        collision.width  = static_cast<float>(textura.width) - 5.0f;
+        collision.height = static_cast<float>(textura.height) - 2.0f;
+
+        // Centrar colisión respecto a la textura
+        collision.x = x + (textura.width  - collision.width)  / 2.0f;
+        collision.y = y + (textura.height - collision.height) / 2.0f;
     }
 
     void mover() {
         y += velocidadY;
-        collision.x = x;
-        collision.y = y;
+        collision.x = x + (textura.width  - collision.width)  / 2.0f;
+        collision.y = y + (textura.height - collision.height) / 2.0f;
     }
 
     void dibujar() {
-        DrawTexture(textura, (int)x, (int)y, WHITE);
+        DrawTexture(textura, static_cast<int>(x), static_cast<int>(y), WHITE);
 
-        if (mostrar_colisiones == true) {
-            DrawRectangle(collision.x, collision.y, collision.width, collision.height, celeste_transparente);
+        if (mostrar_colisiones) {
+            DrawRectangleRec(collision, celeste_transparente);
         }
     }
 
