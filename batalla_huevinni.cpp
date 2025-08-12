@@ -20,7 +20,7 @@ using namespace std;
 Rectangle cuadrado_batalla = { 400.0f, 250.0f, 210.0f, 210.0f };
 int botones_y = 560;
 int boton_seleccionado = 1;
-Color celeste_transparente = {135, 206, 235, 128};
+Color celeste_transparente = {135, 206, 235, 180};
 
 //Velocidad de caida del huevo
 int VelocidadY = 6;
@@ -98,12 +98,14 @@ void ataque_desde_arriba(double tiempoActual, double& tiempoUltimoHuevo, Jugador
         if (tiempoActual - tiempoUltimoHuevo >= 0.12) {
             tiempoUltimoHuevo = tiempoActual;
             generar_ataques(huevo_ataque, 
-                cuadrado_batalla.x, 
-                cuadrado_batalla.x + cuadrado_batalla.width, 
-                cuadrado_batalla.y - 20, 
-                cuadrado_batalla.y - 20, 
-                0.0f,    // velocidad horizontal 0 para ataque desde arriba
-                4.7f);   // velocidad vertical hacia abajo
+                            cuadrado_batalla.x, 
+                            cuadrado_batalla.x + cuadrado_batalla.width, 
+                            cuadrado_batalla.y - 20, 
+                            cuadrado_batalla.y - 20, 
+                            0.0f,    // velocidad horizontal 0 para ataque desde arriba
+                            4.7f,    // velocidad vertical hacia abajo
+                            25.0f,   // ancho colisión deseado (ajusta según tu necesidad)
+                            25.0f);  // alto colisión deseado
         }
 
         actualizar_ataques();
@@ -119,33 +121,34 @@ void ataque_desde_arriba(double tiempoActual, double& tiempoUltimoHuevo, Jugador
         }
     }
 }
+
 
 void ataque_desde_costados(double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double inicioAtaque) {
     if (ataqueEnemigoActivo) {
-        if (tiempoActual - tiempoUltimoHuevo >= 0.2) {
+        if (tiempoActual - tiempoUltimoHuevo >= 0.3) {
             tiempoUltimoHuevo = tiempoActual;
 
             // Ataque desde el lado izquierdo: posición fija a la izquierda, velocidad hacia la derecha (+X)
-            generar_ataques(
-                martillo_ataque,
-                cuadrado_batalla.x - 50 - martillo_ataque.width,  // rangoX_min fijo a la izquierda (un punto fijo)
-                cuadrado_batalla.x - 50 - martillo_ataque.width,  // rangoX_max igual para fijar posición
-                cuadrado_batalla.y - 20,
-                cuadrado_batalla.y + cuadrado_batalla.height,
-                7.0f,   // velocidad en X (derecha)
-                0.0f    // velocidad en Y (sin movimiento vertical)
-            );
+            generar_ataques(martillo_ataque,
+                            cuadrado_batalla.x - 50 - martillo_ataque.width,
+                            cuadrado_batalla.x - 50 - martillo_ataque.width,
+                            cuadrado_batalla.y - 15,
+                            cuadrado_batalla.y + cuadrado_batalla.height,
+                            6.0f,
+                            0.0f,
+                            30.0f,  // ancho colisión
+                            20.0f); // alto colisión
 
-            // Ataque desde el lado derecho: posición fija a la derecha, velocidad hacia la izquierda (-X)
-            generar_ataques(
-                martillo_ataque,
-                cuadrado_batalla.x + cuadrado_batalla.width + 50,  // rangoX_min fijo derecha
-                cuadrado_batalla.x + cuadrado_batalla.width + 50,  // rangoX_max igual
-                cuadrado_batalla.y - 20,
-                cuadrado_batalla.y + cuadrado_batalla.height,
-                -7.0f,  // velocidad en X (izquierda)
-                0.0f    // velocidad en Y (sin movimiento vertical)
-            );
+            generar_ataques(martillo_ataque,
+                            cuadrado_batalla.x + cuadrado_batalla.width + 50,
+                            cuadrado_batalla.x + cuadrado_batalla.width + 50,
+                            cuadrado_batalla.y,
+                            cuadrado_batalla.y + cuadrado_batalla.height,
+                            -6.0f,
+                            0.0f,
+                            30.0f,  // ancho colisión
+                            20.0f); // alto colisión
+
         }
 
         actualizar_ataques();
@@ -162,19 +165,17 @@ void ataque_desde_costados(double tiempoActual, double& tiempoUltimoHuevo, Jugad
     }
 }
 
-
-
-// Generar un nuevo huevo y agregar al vector
 void generar_ataques(Texture2D textura,
                      float rangoX_min, float rangoX_max,
                      float rangoY_min, float rangoY_max,
-                     float velocidadX, float velocidadY) {
+                     float velocidadX, float velocidadY,
+                     float collisionWidth, float collisionHeight) {
     float posX = GetRandomValue((int)rangoX_min, (int)rangoX_max - (int)textura.width);
     float posY = GetRandomValue((int)rangoY_min, (int)rangoY_max - (int)textura.height);
 
-    ataques.emplace_back(posX, posY, velocidadX, velocidadY, textura);
+    // Crear AtaqueObjeto con tamaño colisión personalizado
+    ataques.emplace_back(posX, posY, velocidadX, velocidadY, textura, collisionWidth, collisionHeight);
 }
-
 
 // Actualizar posiciones de todos los huevos
 void actualizar_ataques() {
@@ -195,30 +196,27 @@ std::mutex vidaMutex;
 
 void verificar_colisiones(Jugador& jugador) {
     Rectangle jugadorRect = jugador.collision;
-    static std::atomic<bool> golpeado(false);
 
     if (!invencible) {
-        golpeado = false;
-
+        std::atomic<bool> golpeado(false);
         size_t mitad = ataques.size() / 2;
 
         auto comprobar_rango = [&](size_t inicio, size_t fin) {
-            for (size_t i = inicio; i < fin && !golpeado; ++i) {
+            for (size_t i = inicio; i < fin && !golpeado.load(); ++i) {
                 if (CheckCollisionRecs(jugadorRect, ataques[i].getCollisionRect())) {
-                    golpeado = true;
+                    golpeado.store(true);
                     return;
                 }
             }
         };
 
-        // Lanza en paralelo y espera el resultado
         auto f1 = std::async(std::launch::async, comprobar_rango, 0, mitad);
         auto f2 = std::async(std::launch::async, comprobar_rango, mitad, ataques.size());
 
         f1.get();
         f2.get();
 
-        if (golpeado) {
+        if (golpeado.load()) {
             std::lock_guard<std::mutex> lock(vidaMutex);
             std::cout << "Jugador golpeado!" << std::endl;
             vida -= 4;
@@ -227,6 +225,7 @@ void verificar_colisiones(Jugador& jugador) {
         }
     }
 }
+
 
 // En tu update principal (game loop) llama esta función para actualizar invencibilidad
 void actualizar_invencibilidad() {
@@ -241,8 +240,8 @@ void actualizar_invencibilidad() {
 void eliminar_ataques_fuera_pantalla() {
     ataques.erase(
         std::remove_if(ataques.begin(), ataques.end(), [](const AtaqueObjeto& h) {
-            bool fuera_x = h.x < cuadrado_batalla.x - 50 || h.x > cuadrado_batalla.x + cuadrado_batalla.width + 50;
-            bool fuera_y = h.y < cuadrado_batalla.y - 50 || h.y > cuadrado_batalla.y + cuadrado_batalla.height + 50;
+            bool fuera_x = h.x < cuadrado_batalla.x - 100 || h.x > cuadrado_batalla.x + cuadrado_batalla.width + 100;
+            bool fuera_y = h.y < cuadrado_batalla.y - 100 || h.y > cuadrado_batalla.y + cuadrado_batalla.height + 100;
             return fuera_x || fuera_y;
         }),
         ataques.end()

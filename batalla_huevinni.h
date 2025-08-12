@@ -10,12 +10,12 @@ class Jugador {
 private:
     int x;
     int y;
-    const float margen_x = 14.0f;
-    const float margen_y = 14.0f;
+    const float margen_x = 17.0f;
+    const float margen_y = 15.0f;
 
     void actualizarCollision() {
         collision.x = static_cast<float>(x) + margen_x / 2.0f;
-        collision.y = static_cast<float>(y) + margen_y / 2.0f;
+        collision.y = static_cast<float>(y) + margen_y / 2.0f + 4;
         collision.width = static_cast<float>(textura.width) - margen_x;
         collision.height = static_cast<float>(textura.height) - margen_y;
     }
@@ -44,37 +44,41 @@ public:
     }
     int getY() const { return y; }
 };
-
 class AtaqueObjeto {
 public:
     float x;
     float y;
-    float velocidadY;
     float velocidadX;
+    float velocidadY;
     Texture2D textura;
     Rectangle collision;
+    float collisionWidth;
+    float collisionHeight;
 
-    AtaqueObjeto(float x_init, float y_init, float velX, float velY, Texture2D tex) 
-        : x(x_init), y(y_init), velocidadX(velX), velocidadY(velY), textura(tex) 
+    AtaqueObjeto(float x_init, float y_init, float velX, float velY, Texture2D tex, float colW, float colH)
+        : x(x_init), y(y_init), velocidadX(velX), velocidadY(velY),
+          textura(tex), collisionWidth(colW), collisionHeight(colH)
     {
-        collision.width  = static_cast<float>(textura.width) - 5.0f;
-        collision.height = static_cast<float>(textura.height) - 2.0f;
-
-        collision.x = x + (textura.width  - collision.width)  / 2.0f;
-        collision.y = y + (textura.height - collision.height) / 2.0f;
+        actualizarCollision();
     }
 
     void mover() {
         x += velocidadX;
         y += velocidadY;
-        collision.x = x + (textura.width  - collision.width)  / 2.0f;
-        collision.y = y + (textura.height - collision.height) / 2.0f;
+        actualizarCollision();
     }
 
-    void dibujar() {
+    void actualizarCollision() {
+        collision.x = x + (textura.width - collisionWidth) / 2.0f;
+        collision.y = y + (textura.height - collisionHeight) / 2.0f;
+        collision.width = collisionWidth;
+        collision.height = collisionHeight;
+    }
+
+    void dibujar() const {
         DrawTexture(textura, static_cast<int>(x), static_cast<int>(y), WHITE);
 
-        if (mostrar_colisiones) {
+        if (mostrar_colisiones) {  // variable global o que controles para debug
             DrawRectangleRec(collision, celeste_transparente);
         }
     }
@@ -83,7 +87,6 @@ public:
         return collision;
     }
 };
-
 
 extern Rectangle cuadrado_batalla;
 extern int boton_seleccionado;
@@ -105,10 +108,11 @@ void actualizar_ataques();
 void dibujar_ataques();
 void verificar_colisiones(Jugador &jugador);
 void actualizar_invencibilidad();
-void generar_ataques(Texture2D textura,
-                     float rangoX_min, float rangoX_max,
-                     float rangoY_min, float rangoY_max,
-                     float velocidadX = 0.0f, float velocidadY = 5.0f);
+void generar_ataques(Texture2D textura, 
+                     float rangoX_min, float rangoX_max, 
+                     float rangoY_min, float rangoY_max, 
+                     float velocidadX, float velocidadY,
+                     float collisionWidth, float collisionHeight);
 void eliminar_ataques_fuera_pantalla();
 void ataque_desde_arriba(double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double inicioAtaque);
 void leer_ataques(const std::vector<std::string>& ataques_toda_batalla, int turno, double tiempoActual, double& tiempoUltimoHuevo, Jugador& jugador, double& inicioAtaque);

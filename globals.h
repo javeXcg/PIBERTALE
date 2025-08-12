@@ -80,6 +80,7 @@ extern bool jugador_atacando;
 extern int dano;
 extern Music musica_actual;
 extern bool musica_cargada;
+extern vector<string> inventario;
 
 std::vector<std::string> adaptar_dialogo(const std::string &dialogo, size_t limite = 15);
 void dialogoDelTurno(int turno, const std::vector<std::string> &dialogos);
